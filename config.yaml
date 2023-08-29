@@ -12,7 +12,7 @@ menu:
     weight: 2
     identifier: syllabus
     url: "#syllabus"
-  - name: Sakai
+  - name: Canvas
     pre: <i class="fas fa-chalkboard-teacher"></i>
     weight: 3
     url: https://canvas.duke.edu/courses/8611

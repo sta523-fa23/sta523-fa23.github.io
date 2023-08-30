@@ -55,7 +55,7 @@ options(
   - Wednesdays, 10:05 - 11:20 am
   - Fridays, 10:05 - 11:20 am
   
-* Labs (weekly) - Old Chemistry 116
+* Labs (weekly) - Old Chemistry 001
   - Lab 01 - Thursdays, 10:05 - 11:20 am
 
 

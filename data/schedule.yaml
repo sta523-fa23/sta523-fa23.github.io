@@ -6,14 +6,14 @@ schedule:
   day: 1
   lecture: "Welcome & Syllabus"
   slides: Lec01
-  screencast: 
+  screencast: https://youtu.be/s-Rn3YAypfg
   notes:
 
 - week: 1
   day: 2
   lecture: "git & github review"
   slides:
-  screencast:
+  screencast: https://youtu.be/mBMi3E9RY2M
   readings:
   - text: GitHub ssh auth guide
     link: https://github.com/DukeStatSci/github_auth_guide

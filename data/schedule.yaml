@@ -22,7 +22,7 @@ schedule:
 - week: 1
   day: 3
   lecture: "Types and Control Flow in R"
-  slides: 
+  slides: Lec02
   screencast:
   readings:
   - text: Tidyverse style guide

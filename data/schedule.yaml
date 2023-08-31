@@ -13,8 +13,11 @@ schedule:
   day: 2
   lecture: "git & github review"
   slides:
-  screencast: 
-  notes: "< a href='https://github.com/DukeStatSci/github_auth_guide'>GitHub ssh auth guide</a>"
+  screencast:
+  readings:
+  - text: GitHub ssh auth guide
+    link: https://github.com/DukeStatSci/github_auth_guide
+  notes: 
 
 - week: 1
   day: 3

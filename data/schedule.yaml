@@ -10,6 +10,13 @@ schedule:
   notes:
 
 - week: 1
+  day: 2
+  lecture: "git & github review"
+  slides:
+  screencast: 
+  notes: "< a href='https://github.com/DukeStatSci/github_auth_guide'>GitHub ssh auth guide</a>"
+
+- week: 1
   day: 3
   lecture: "Types and Control Flow in R"
   slides: 

@@ -446,7 +446,7 @@ typeof(NA_complex_)
 
 Because `NA`s represent missing values it makes sense that any calculation using them should also be missing.
 
-:::: {.columns}
+:::: {.columns .small}
 ::: {.column width='50%'}
 ```{r}
 1 + NA
@@ -466,10 +466,12 @@ sum(c(1, 2, 3, NA))
 
 Summarizing functions (e.g. `sum()`, `mean()`, `sd()`, etc.) will often have a `na.rm` argument which will allow you to *drop* missing values.
 
+::: {.small}
 ```{r}
 sum(c(1, 2, 3, NA), na.rm = TRUE)
 mean(c(1, 2, 3, NA), na.rm = TRUE)
 ```
+:::
 
   
 ## NAs are not always sticky 

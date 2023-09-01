@@ -939,7 +939,7 @@ if (x == 3)
 
 
 ::: {.aside}
-Note that the behavior seen above (thrown errors) is new in R 4.2, previous versions will only throw warnings (using on the first value in the condition vector).
+Note that the behavior seen above (thrown errors) is new in R 4.2, previous versions will only throw warnings (using only the first value in the condition vector).
 :::
 
 

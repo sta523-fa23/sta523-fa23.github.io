@@ -23,13 +23,13 @@ schedule:
   day: 3
   lecture: "Types and Control Flow in R"
   slides: Lec02
-  screencast:
+  screencast: https://youtu.be/SQ4gJlzDaDo
   readings:
   - text: Tidyverse style guide
     link: https://style.tidyverse.org/
   - text: Adv-R - Data Structures
     link: http://adv-r.had.co.nz/Data-structures.html
-  notes: 
+  notes: "<a href='https://github.com/sta523-fa23/exercises'>Exercises</a> repo"
 
 
 - week: 2

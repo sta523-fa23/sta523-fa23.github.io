@@ -14,7 +14,10 @@ execute:
 ---
 
 
-```{r setup, message=FALSE, warning=FALSE, include=FALSE}
+```{r setup}
+#| message: False
+#| warning: False
+#| include: False
 options(
   htmltools.dir.version = FALSE, # for blogdown
   width=80
@@ -618,7 +621,8 @@ Considering only the four (common) data types, what is R's implicit type convers
 *Hint* - think about the pairwise interactions between types.
 :::
 
-```{r echo=FALSE}
+```{r}
+#| echo: False
 countdown::countdown(minutes=5)
 ```
 
@@ -925,14 +929,16 @@ x = c(1, 3)
 
 . . .
 
-```{r error=TRUE}
+```{r}
+#| error: True
 if (x == 1)
   print("x is 1!")
 ```
 
 . . .
 
-```{r error=TRUE}
+```{r}
+#| error: True
 if (x == 3)
   print("x is 3!")
 ```
@@ -1105,7 +1111,8 @@ f("zero")
 More on functions next time
 :::
 
-```{r echo=FALSE}
+```{r}
+#| echo: False
 countdown::countdown(minutes = 5)
 ```
 
@@ -1117,7 +1124,8 @@ countdown::countdown(minutes = 5)
 
 :::: {.columns .small}
 ::: {.column width='50%'}
-```{r error=TRUE}
+```{r}
+#| error: True
 if (2 != NA) {
   "Here"
 }
@@ -1125,7 +1133,8 @@ if (2 != NA) {
 :::
 
 ::: {.column width='50%'}
-```{r error=TRUE}
+```{r}
+#| error: True
 2 != NA
 ```
 :::
@@ -1137,7 +1146,8 @@ if (2 != NA) {
 :::: {.columns .small}
 ::: {.column width='50%'}
 
-```{r error=TRUE}
+```{r}
+#| error: True
 if (all(c(1,2,NA,4) >= 1)) {
   "There"
 }
@@ -1146,7 +1156,8 @@ if (all(c(1,2,NA,4) >= 1)) {
 
 ::: {.column width='50%'}
 
-```{r error=TRUE}
+```{r}
+#| error: True
 all(c(1,2,NA,4) >= 1)
 ```
 :::
@@ -1156,7 +1167,8 @@ all(c(1,2,NA,4) >= 1)
 
 :::: {.columns .small}
 ::: {.column width='50%'}
-```{r error=TRUE}
+```{r}
+#| error: True
 if (any(c(1,2,NA,4) >= 1)) {
   "There"
 }
@@ -1164,7 +1176,8 @@ if (any(c(1,2,NA,4) >= 1)) {
 :::
 
 ::: {.column width='50%'}
-```{r error=TRUE}
+```{r}
+#| error: True
 any(c(1,2,NA,4) >= 1)
 ```
 :::

@@ -12,7 +12,10 @@ format:
 ---
 
 
-```{r setup, message=FALSE, warning=FALSE, include=FALSE}
+```{r setup}
+#| message: False
+#| warning: False
+#| include: False
 options(
   htmltools.dir.version = FALSE, # for blogdown
   width=80

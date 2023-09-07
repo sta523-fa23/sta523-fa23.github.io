@@ -36,7 +36,7 @@ schedule:
   day: 1
   lecture: "Error checking, functions, and loops"
   slides: Lec03
-  screencast: 
+  screencast: https://youtu.be/OWqerC-Durw
   readings:
   - text: Happy Git and GitHub
     link: http://happygitwithr.com/
@@ -44,8 +44,8 @@ schedule:
   
 - week: 2
   day: 3
-  lecture: "Attributes & S3"
-  slides: 
+  lecture: "Lists, Attributes, & S3"
+  slides: Lec04
   screencast: 
   readings:
   - text: Adv R - OO Field Guide - S3

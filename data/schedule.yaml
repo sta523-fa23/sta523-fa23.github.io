@@ -54,8 +54,8 @@ schedule:
 
 - week: 3
   day: 1
-  lecture: "Data frames, matrices, & subsetting"
-  slides: 
+  lecture: "Matrices, data frames, & subsetting"
+  slides: Lec05
   screencast: 
   readings:
   - text: Adv-R - Subsetting

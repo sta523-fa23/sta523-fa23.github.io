@@ -79,6 +79,10 @@ schedule:
 
 - week: 4
   day: 1
+  lecture: "<i>No class</i>"
+
+- week: 4
+  day: 3
   lecture: "tidyr"
   slides: 
   screencast: 
@@ -89,8 +93,8 @@ schedule:
     link: https://tidyr.tidyverse.org/articles/rectangle.html
   notes:
 
-- week: 4
-  day: 3
+- week: 5
+  day: 1
   lecture: "Functional programming & purrr"
   slides: 
   screencast: 
@@ -104,7 +108,7 @@ schedule:
   notes: 
 
 - week: 5
-  day: 1
+  day: 3
   lecture: "ggplot2"
   slides: 
   screencast: 

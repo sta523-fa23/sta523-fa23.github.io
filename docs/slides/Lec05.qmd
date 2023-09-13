@@ -66,7 +66,7 @@ c(n)
 
 . . .
 
-When creating the matrix we can populate the matrix via rows, but that data will still be stored by column.
+We can populate a matrix by row, but the data is still stored by column.
 
 :::: {.columns .small}
 ::: {.column width='50%'}
@@ -149,7 +149,7 @@ array(letters[1:6], dim = c(2,1,3))
 ::::
 
 ::: aside
-A 2d array will have class `c("matrix","array" )` while 1d or >2d will only have class `"array"`
+A 2d array will have class `c("matrix","array")` while 1d or >2d will only have class `"array"`
 :::
 
 
@@ -183,7 +183,7 @@ str(df)
 
 ## Data Frame Structure
 
-:::: {.columns}
+:::: {.columns .medium}
 ::: {.column width='50%'}
 ```{r}
 typeof(df)
@@ -234,7 +234,7 @@ is.data.frame(df)
 
 Previous to R v4.0, the default behavior of data frames was to convert character data into factors. Sometimes this was useful, but mostly it wasn't.
 
-It is important to know what type/class you are working with. This behavior can be changed using the `stringsAsFactors` argument to `data.frame` and related functions (e.g. `read.csv`, `read.table`, etc.).
+This behavior is controlled via the `stringsAsFactors` argument to `data.frame` (and related functions like `read.csv`, `read.table`, etc.).
 
 :::: {.columns .small}
 ::: {.column width='50%'}
@@ -261,7 +261,7 @@ str(df)
 
 ## Length Coercion
 
-For data frames on creation the lengths of the component vectors will be coerced to match, however if they not multiples then there will be an error (previously this produced a warning).
+When creating a data frame from different vectors, the lengths of the component vectors will be coerced to match. However, if they not multiples of each other then there will be an error (other previous forms of length coercion would produce a warning for this case).
 
 ```{r}
 #| error: True
@@ -755,6 +755,12 @@ write down how you would create a subset to accomplish each of the following:
 * Remove all values with an odd index (e.g. 1, 3, etc.)
 
 * Remove every 4th value, but only if it is odd.
+
+
+```{r}
+#| echo: false
+countdown::countdown(5)
+```
 
 
 # Subsetting Data Frames

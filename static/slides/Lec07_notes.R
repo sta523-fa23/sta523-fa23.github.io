@@ -10,15 +10,18 @@ library(tidyverse)
   "Dave",     19,    19,    18,    19,      86,      82
 ))
 
-grades %>% 
-  pivot_longer(-name, 
+grades |> 
+  pivot_longer(
+    -name, 
     names_to = "assignment", 
-    values_to = "score"
-  ) %>%
-  separate(col = assignment, into = c("type", "number"), sep = "_") %>%
-  group_by(name, type) %>%
-  summarize(avg_score = sum(score) / n()) %>%
-  pivot_wider(id_cols = name, names_from = type, values_from = avg_score) %>%
+    values_to = "score", 
+  ) |>
+  separate(col = assignment, into = c("type", "number"), sep = "_") |>
+  summarize(
+    avg_score = sum(score) / n(),
+    by = c(name, type)
+  ) |>
+  pivot_wider(id_cols = name, names_from = type, values_from = avg_score) |>
   mutate(
     overall = 0.5 * (hw/20) + 0.5 * (proj/100)
   )
@@ -42,12 +45,12 @@ d = tibble::tribble(
   "C",  2000,   "pop",   "1T"
 )
 
-d %>%
-  group_by(country, year) %>%
+d |>
+  group_by(country, year) |>
   summarize(
     n = n(),
     .groups = "keep"
-  ) %>%
+  ) |>
   summarize(
     n = n()
   )
@@ -55,8 +58,8 @@ d %>%
 
 ## Exercise 1
 
-palmerpenguins::penguins %>%
-  count(island, species) %>%
+palmerpenguins::penguins |>
+  count(island, species) |>
   pivot_wider(id_cols = island, names_from = species, values_from = n, values_fill = 0)
 
 
@@ -67,27 +70,27 @@ library(repurrrsive)
 
 ### Which planet appeared in the most starwars film (according to the data in sw_planet)?
 
-tibble::tibble(planet = sw_planets) %>%
-  unnest_wider(planet) %>%
-  select(name, url, films) %>%
-  unnest_longer(films) %>%
-  count(name) %>%
+tibble::tibble(planet = sw_planets) |>
+  unnest_wider(planet) |>
+  select(name, url, films) |>
+  unnest_longer(films) |>
+  count(name) |>
   top_n(2, n)
 
 ### Which planet was the homeworld of the most characters in the starwars films?
 
 left_join(
-  tibble::tibble(people = sw_people) %>%
-    unnest_wider(people) %>%
+  tibble::tibble(people = sw_people) |>
+    unnest_wider(people) |>
     select(name, homeworld),
-  tibble::tibble(planet = sw_planets) %>%
-    unnest_wider(planet) %>%
+  tibble::tibble(planet = sw_planets) |>
+    unnest_wider(planet) |>
     select(name, url),
   by = c("homeworld" = "url")
-) %>%
+) |>
   select(
     char_name = name.x,
     homeworld = name.y
-  ) %>% 
-  count(homeworld) %>%
+  ) |> 
+  count(homeworld) |>
   top_n(1, n)

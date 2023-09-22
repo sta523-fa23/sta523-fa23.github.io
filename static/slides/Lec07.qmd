@@ -188,6 +188,20 @@ separate_longer_delim(d, rate, delim = "/")
 From [Data tidying with tidyr](https://raw.githubusercontent.com/rstudio/cheatsheets/main/tidyr.pdf)
 :::
 
+## Other separates
+
+In previous versions of tidyr there was a single catch-all `separate()` function. This still exists and is available in the package but it is [**superseded**](https://lifecycle.r-lib.org/articles/stages.html).
+
+Other helpful separate functions:
+
+* `separate_longer_position()`
+
+* `separate_wider_position()`
+
+* `separate_wider_regex()`
+
+
+
 
 ## Unite
 

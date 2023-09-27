@@ -107,9 +107,9 @@ integrate(function(x) x^2-2*x+1, 0, 1)
 
 ## Base R anonymous function (lambda) shorthand
 
-::: {.medium}
 Along with the base pipe (`|>`), R v4.1.0 introduced a shortcut for anonymous functions using `\()`,
 
+::: {.small}
 ```{r}
 (\(x) {1+x})(1:5)
 ```
@@ -125,10 +125,12 @@ integrate(\(x) sin(x)^2, 0, 1)
 
 . . .
 
-::: {.medium}
+
 Use of this with the base pipe helps avoid the need for `_`, e.g.
 
+::: {.small}
 ```{r}
+#| output-location: column
 data.frame(x = runif(10), y = runif(10)) |>
   {\(d) lm(y~x, data = d)}()
 ```
@@ -164,16 +166,18 @@ Usage: `lapply(X, FUN, ...)`
 
 `lapply` returns a list of the same length as `X`, each element of which is the result of applying `FUN` to the corresponding element of `X`.
 
+. . .
+
 :::: {.columns .medium}
 ::: {.column width='50%'}
 ```{r}
-lapply(1:8, sqrt) %>% 
+lapply(1:8, sqrt) |> 
   str()
 ```
 :::
 ::: {.column width='50%'}
 ```{r}
-lapply(1:8, function(x) (x+1)^2) %>% 
+lapply(1:8, function(x) (x+1)^2) |> 
   str()
 ```
 :::
@@ -182,18 +186,30 @@ lapply(1:8, function(x) (x+1)^2) %>%
 
 ## Argument matching
 
-::: {.medium}
+:::: {.columns .small}
+::: {.column width='50%'}
 ```{r}
-lapply(1:8, function(x, pow) x^pow, pow=3) %>% str()
+lapply(1:8, function(x, pow) x^pow, pow=3) |> 
+  str()
 ```
+
+:::
+
+::: {.column width='50%'}
+```{r}
+lapply(1:8, function(x, pow) x^pow, x=2) |> 
+  str()
+```
+:::
+::::
+
+::: {.medium}
 :::
 
 . . .
 
 ::: {.medium}
-```{r}
-lapply(1:8, function(x, pow) x^pow, x=2) %>% str()
-```
+
 :::
 
 ## sapply
@@ -201,6 +217,8 @@ lapply(1:8, function(x, pow) x^pow, x=2) %>% str()
 Usage: `sapply(X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)`
 
 `sapply` is a *user-friendly* version and wrapper of `lapply`, it is a *simplifying* version of lapply. Whenever possible it will return a vector, matrix, or an array.
+
+. . .
 
 ```{r}
 sapply(1:8, sqrt)
@@ -213,12 +231,12 @@ sapply(1:8, function(x) c(x, x^2, x^3))
 :::: {.columns}
 ::: {.column width='50%'}
 ```{r}
-sapply(1:6, seq)
+sapply(1:6, seq) |> str()
 ```
 :::
 ::: {.column width='50%'}
 ```{r}
-lapply(1:6, seq)
+lapply(1:6, seq) |> str()
 ```
 :::
 ::::
@@ -231,19 +249,19 @@ l = list(a = 1:3, b = 4:6, c = 7:9, d = list(10, 11, "A"))
 ```
 
 ```{r}
-sapply(l, function(x) x[1]) %>% str()
+sapply(l, function(x) x[1]) |> str()
 ```
 
 . . .
 
 ```{r}
-sapply(l, function(x) x[[1]]) %>% str()
+sapply(l, function(x) x[[1]]) |> str()
 ```
 
 . . .
 
 ```{r}
-sapply(l, function(x) x[[3]]) %>% str()
+sapply(l, function(x) x[[3]]) |> str()
 ```
 
 
@@ -262,14 +280,14 @@ df = data.frame(
 . . .
 
 ```{r}
-lapply(df, class) %>% str()
+lapply(df, class) |> str()
 sapply(df, class)
 ```
 
 
 ## A more useful example
 
-Some sources of data (e.g. the US government) will encode missing values with `-999`, if want to replace these with `NA`s lapply is not a bad choice.
+Some sources of data (e.g. some US government agencies) will encode missing values with `-999`, if want to replace these with `NA`s lapply is not a bad choice.
 
 ::: {.small}
 ```{r}
@@ -298,7 +316,7 @@ lapply(d, fix_missing)
 :::
 ::: {.column width='50%'}
 ```{r}
-lapply(d, fix_missing) %>%
+lapply(d, fix_missing) |>
   as_tibble()
 ```
 :::
@@ -312,7 +330,7 @@ dplyr is also a viable option here using the `across()` helper,
 :::: {.columns .medium}
 ::: {.column width='50%'}
 ```{r}
-d %>%
+d |>
   mutate(
     across(
       bp:o2, 
@@ -321,9 +339,9 @@ d %>%
   )
 ```
 :::
-::: {.column width='50%'}
+::: {.column width='50%' .fragment}
 ```{r}
-d %>%
+d |>
   mutate(
     across(
       where(is.numeric), 
@@ -382,40 +400,33 @@ x = list(rnorm(1e3), rnorm(1e3), rnorm(1e3))
 
 . . .
 
-::: {.small}
+:::: {.columns .small}
+::: {.column width='50%'}
 ```{r}
 map_dbl(x, mean)
-```
-:::
-
-. . .
-
-::: {.small}
-```{r}
 map_chr(x, mean)
 ```
 :::
 
-. . .
-
-::: {.small}
+::: {.column width='50%'}
 ```{r}
 #| error: True
 map_int(x, mean)
 ```
 :::
+::::
 
 . . .
 
 :::: {.columns .small}
 ::: {.column width='50%'}
 ```{r}
-map(x, mean) %>% str()
+map(x, mean) |> str()
 ```
 :::
 ::: {.column width='50%'}
 ```{r}
-lapply(x, mean) %>% str()
+lapply(x, mean) |> str()
 ```
 :::
 ::::
@@ -423,8 +434,7 @@ lapply(x, mean) %>% str()
 
 ## Working with Data Frames
 
-purrr offers the functions `map_dfr` and `map_dfc` which were superseded as of v1.0.0 - these allowed for the construction of a data frame by row or by column respectively.
-are particularly useful when working with and/or creating data frames. 
+purrr offers the functions `map_dfr` and `map_dfc` (which were superseded as of v1.0.0) - these allow for the construction of a data frame by row or by column respectively.
 
 :::: {.columns .small}
 ::: {.column width='50%'}
@@ -451,7 +461,7 @@ fix_missing = function(x) {
 
 . . .
 
-:::: {.columns}
+:::: {.columns .small}
 ::: {.column width='50%'}
 ```{r}
 purrr::map_dfc(d, fix_missing)
@@ -470,16 +480,20 @@ purrr::map(d, fix_missing) |>
 
 ## Building by row 
 
+::: {.small}
 ```{r}
 map(sw_people, function(x) x[1:5]) |> bind_rows()
 ```
+:::
 
 . . .
 
+::: {.small}
 ```{r}
 #| error: True
 map(sw_people, function(x) x) |> bind_rows()
 ```
+:::
 
 
 ## purrr style anonymous functions
@@ -514,7 +528,7 @@ Generally, the latter option is preferred to avoid confusion with magrittr.
 
 ## Multiargument anonymous functions
 
-Functions with the `map2` prefix work the same as the `map` functions but they iterate over two objects instead of one. Arguments in an anonymous function are given by `.x` and `.y` (or `..1` and `..2`) respectively.
+Functions with the `map2` prefix work the same as the `map` prefixed functions but they iterate over two objects instead of one. Arguments for an anonymous function are given by `.x` and `.y` (or `..1` and `..2`) respectively.
 
 ```{r}
 map2_dbl(1:5, 1:5, function(x,y) x / (y+1))
@@ -541,35 +555,43 @@ map2_chr(LETTERS[1:5], letters[1:5], paste0)
 
 ## Lookups
 
-Very often we want to extract only certain values by name or position from a list, `purrr` provides a shortcut for this operation - if instead of a function you provide either a character or numeric vector, those values will be used to sequentially subset the elements being iterated.
+Very often we want to extract only certain values by name or position from a list, `purrr` provides a shorthand for this operation - instead of a function you can provide either a character or numeric vector, those values will be used to sequentially subset the elements being iterated.
 
 . . .
 
+::: {.small}
 ```{r}
-purrr::map_chr(sw_people, "name") %>% head()
+purrr::map_chr(sw_people, "name") |> head()
 ```
+:::
 
 . . .
 
+::: {.small}
 ```{r}
-purrr::map_chr(sw_people, 1) %>% head()
+purrr::map_chr(sw_people, 1) |> head()
 ```
+:::
 
 . . .
 
+::: {.small}
 ```{r}
-purrr::map_chr(sw_people, list("films", 1)) %>% head(n=10)
+purrr::map_chr(sw_people, list("films", 1)) |> head(n=10)
 ```
+:::
 
 
 ## Length coercion?
 
+::: {.small}
 ```{r error = TRUE}
 purrr::map_chr(sw_people, list("starships", 1))
 ```
+:::
 . . .
 
-:::: {.columns}
+:::: {.columns .small}
 ::: {.column width='50%'}
 ```{r}
 sw_people[[2]]$name
@@ -585,15 +607,19 @@ sw_people[[2]]$starships
 
 . . .
 
+::: {.small}
 ```{r error = TRUE}
-purrr::map_chr(sw_people, list("starships", 1), .default = NA) %>% head()
+purrr::map_chr(sw_people, list("starships", 1), .default = NA) |> head()
 ```
+:::
 
 . . .
 
+::: {.small}
 ```{r error = TRUE}
-purrr::map(sw_people, list("starships", 1)) %>% head() %>% str()
+purrr::map(sw_people, list("starships", 1)) |> head() |> str()
 ```
+:::
 
 
 ## list columns
@@ -613,7 +639,7 @@ purrr::map(sw_people, list("starships", 1)) %>% head() %>% str()
 :::
 ::: {.column width='50%' .fragment}
 ```{r}
-chars %>%
+chars |>
   mutate(
     n_starships = map_int(
       starships, length

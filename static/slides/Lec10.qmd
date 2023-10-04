@@ -363,7 +363,7 @@ ggplot(datasauRus::datasaurus_dozen, aes(x = x, y = y)
 ```
 :::
 
-::: aside
+::: {.aside}
 See [here](https://www.autodesk.com/research/publications/same-stats-different-graphs) for the original paper
 :::
 

@@ -86,10 +86,15 @@ formatC(1/10^(0:5), digits = 6, width = 6, format = "fg") |>
 ::::
 
 
-## Whitespace cleaning - `str_trim()` & `str_squish()`
+## Whitespace cleaning - `str_trim()`,`str_squish()`
 
 ```{r}
 (x = c("   abc" , "ABC   " , " Hello.  World "))
+```
+
+<p></p>
+
+```{r}
 str_trim(x)
 str_trim(x, side="left")
 str_trim(x, side="right")
@@ -102,6 +107,8 @@ str_squish(x)
 ```{r}
 x = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 ```
+
+<p></p>
 
 ```{r}
 str_trunc(x, width=60)
@@ -118,7 +125,7 @@ cat(x)
 
 . . .
 
-<br/>
+<p></p>
 
 ```{r}
 str_wrap(x)
@@ -128,13 +135,18 @@ str_wrap(x)
 
 ```{r}
 str_wrap(x) |> cat()
+```
+
+<p></p>
+
+```{r}
 str_wrap(x, width=60) |> cat()
 ```
 
 
 ## Strings templates - `str_glue()`
 
-This is a simplified wrapper around `glue::glue()`, use the original for additional control.
+This is a simplified wrapper around `glue::glue()` (use the original for additional control).
 
 
 :::: {.columns .medium}
@@ -200,7 +212,7 @@ str_to_sentence(x)
 
 :::
 
-<br />
+<p></p>
 
 Many of these functions have variants with an `_all` suffix (e.g. `str_replace_all`) which will match more than one occurrence of the pattern in a string.
 
@@ -297,7 +309,9 @@ str_subset(
 
 ## Aside - Escape Characters 
 
-An escape character is a character which results in an alternative interpretation of the subsequent character(s). These vary from language to language but for most string implementations `\` is the escape character which is modified by a single following character.
+An escape character is a character which results in an alternative interpretation of the subsequent character(s). 
+
+These vary from language to language but for most string implementations `\` is the escape character which is modified by a single following character.
 
 Some common examples:
 
@@ -391,7 +405,7 @@ cat("a\\b")
 
 ## Raw character constants
 
-As of R 4.0, R has the ability to define raw character sequences which avoids the need for most escape characters using the `r"(...)"` syntax, where `...` is the raw string.
+As of v4.0, R has the ability to define raw character sequences which avoids the need for most escape characters, they can be constructed using the `r"(...)"` syntax, where `...` is the raw string.
 
 . . .
 
@@ -401,15 +415,15 @@ As of R 4.0, R has the ability to define raw character sequences which avoids th
 print(
   "\\int_0^\\infty 1/e^x"
 )
-cat(
-  "\\int_0^\\infty 1/e^x"
+print(
+  r"(\int_0^\infty 1/e^x)"
 )
 ```
 :::
 ::: {.column width='50%'}
 ```{r}
-print(
-  r"(\int_0^\infty 1/e^x)"
+cat(
+  "\\int_0^\\infty 1/e^x"
 )
 cat(
   r"(\int_0^\infty 1/e^x)"
@@ -437,9 +451,9 @@ Because of their special properties they cannot be matched directly, if you need
 
 . . .
 
-The problem is that regex escapes live on top of character escapes, so there needs to use *two* levels of escapes.
+The problem is that regex escapes live on top of character escapes, so we need to use *two* levels of escapes.
 
-<br/>
+<p></p>
 
 . . .
 
@@ -469,7 +483,7 @@ str_detect("abc[def" ,"\\[")
 
 . . .
 
-<br/>
+<p></p>
 
 How do we detect if a string contains a `\` character?
 
@@ -488,8 +502,8 @@ str_detect("abc\\def" ,"\\\\")
 
 ## XKCD's take
 
-<br/>
-<br/>
+<p></p>
+<p></p>
 
 ```{r echo=FALSE, fig.align="center" , out.width="80%"}
 knitr::include_graphics("imgs/xkcd_backslashes.png")
@@ -501,7 +515,7 @@ knitr::include_graphics("imgs/xkcd_backslashes.png")
 
 Sometimes we want to specify that our pattern occurs at a particular location in a string, we indicate this using anchor metacharacters.
 
-<br />
+<p></p>
 
 | Regex | Anchor    |
 |-------|:----------|
@@ -617,7 +631,7 @@ str_replace_all(text, "\\b(a|e|i|o|u)" ,"*")
 
 When we want to match whole classes of characters at a time there are a number of convenience patterns built in,
 
-<br />
+<p></p>
 
 | Meta Char | Class | Description |
 |:----:|:------------|:-|
@@ -676,7 +690,7 @@ str_detect(text, "\\(\\d\\d\\d\\) \\d\\d\\d-\\d\\d\\d\\d")
 
 We can also specify our own classes using square brackets
 
-<br />
+<p></p>
 
 | Class    | Type        |
 |----------|:------------|
@@ -738,12 +752,17 @@ dput(randomNames(20, name.order="first.last" , name.sep=" "))
 ```
 
 
+```{r}
+#| echo: false
+countdown::countdown(5)
+```
+
 
 ## Quantifiers
 
 Attached to literals or character classes these allow a match to repeat some number of time.
 
-<br />
+<p></p>
 
 | Quantifier | Description |
 |:-----------|:------------|
@@ -794,7 +813,7 @@ text = "<div class='main'> <div> <a href='here.pdf'>Here!</a> </div> </div>"
 str_extract(text, "<div>.*</div>")
 ```
 
-<br/>
+<p></p>
 
 . . .
 
@@ -809,7 +828,7 @@ str_extract(text, "<div>.*?</div>")
 
 Groups allow you to connect pieces of a regular expression for modification or capture.
 
-<br />
+<p></p>
 
 | Group           | Description                              |
 |-----------------|:-----------------------------------------|
@@ -879,7 +898,7 @@ str_match(text, "^([:alpha:]+) ([:alpha:]+)")
 
 Validating an email address:
 
-<br />
+<p></p>
 
 
 ```
@@ -911,3 +930,8 @@ text = c(
 
 
 * Once that works use groups to extracts the area code separately from the rest of the phone number.
+
+```{r}
+#| echo: false
+countdown::countdown(5)
+```

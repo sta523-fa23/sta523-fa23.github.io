@@ -5,3 +5,4 @@ prev_uoe/*
 *_files/
 *.sqlite
 *.icloud
+.DS_Store

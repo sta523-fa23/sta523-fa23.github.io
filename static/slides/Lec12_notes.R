@@ -33,26 +33,26 @@ movies = tibble::tibble(
 
 ## Exercise 1
 
-scrape_movie_page = function(url) {
-  page = read_html(url)
-  
-  list(
-    n_reviews = page |> 
-      html_elements(".scoreboard__link--tomatometer") |>
-      html_text2() |>
-      str_remove(" Reviews") |>
-      as.integer(),
-    aud_ratings = page |>
-      html_elements(".scoreboard__link--audience") |>
-      html_text2() |>
-      str_remove(" Ratings"),
-    run_time = page |>
-      html_elements(".scoreboard__info") |>
-      html_text2() |>
-      str_split(", ", simplify = TRUE) |>
-      {.[,3]}
-  )
-}
+#scrape_movie_page = function(url) {
+#  page = read_html(url)
+#  
+#  list(
+#    n_reviews = page |> 
+#      html_elements(".scoreboard__link--tomatometer") |>
+#      html_text2() |>
+#      str_remove(" Reviews") |>
+#      as.integer(),
+#    aud_ratings = page |>
+#      html_elements(".scoreboard__link--audience") |>
+#      html_text2() |>
+#      str_remove(" Ratings"),
+#    run_time = page |>
+#      html_elements(".scoreboard__info") |>
+#      html_text2() |>
+#      str_split(", ", simplify = TRUE) |>
+#      {.[,3]}
+#  )
+#}
 
 movies = movies |>
   mutate(

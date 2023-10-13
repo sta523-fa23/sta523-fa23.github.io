@@ -5,3 +5,4 @@ public/
 .hugo_build.lock
 static/slides/prev/
 test/
+.DS_Store

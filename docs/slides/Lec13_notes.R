@@ -5,7 +5,7 @@ library(tidyverse)
 books = jsonlite::read_json("https://www.anapioficeandfire.com/api/books?pageSize=20")
 
 books |>
-  tibble(books = .) |>
+  tibble(books = _) |>
   unnest_wider(books) |>
   View()
 
@@ -60,7 +60,7 @@ resp |>
 
 resp |> 
   resp_body_json() |>
-  tibble(houses = .) |>
+  tibble(houses = _) |>
   unnest_wider(houses) |>
   View()
 
@@ -73,38 +73,39 @@ resp |>
   
 
 get_links = function(resp) {
-  resp_header(resp, "link") |>
+  resp |>
+    resp_header("link") |>
     str_match_all('<(.*?)>; rel="([a-zA-Z]+)"') |>
-    (\(x) x[[1]])() |>
-    (\(x) (setNames(as.list(x[,2]), x[,3])))()
+    (\(x) (setNames(as.list(x[[1]][,2]), x[[1]][,3])))()
 }
 
 get_links(resp)[["next"]]
 
 
 
-resp = request("https://www.anapioficeandfire.com/api/houses") |>
-  req_url_query(pageSize=50, page=1) |>
-  req_perform()
+req = request("https://www.anapioficeandfire.com/api/houses") |>
+  req_url_query(pageSize=50, page=1)
+  
+resp = req_perform(req)
 full = list()
 page = 1
 
 repeat {
-  cat("Grapping page", page, "\n")
+  cat("Grabbing page", page, "\n")
   full = c(full, resp_body_json(resp))
   
   links = get_links(resp)
   if (is.null(links[["next"]]))
     break
   
-  resp = request(links[["next"]]) |>
-    req_perform()
+  req = req_url(req, links[["next"]])
+  resp = req_perform(req)
   
   page = page+1
 }
 
 full |>
-  tibble(houses = .) |>
+  tibble(houses = _) |>
   unnest_wider(houses) |>
   View()
 
@@ -147,7 +148,7 @@ aaoif = function(
   }
   
   full |>
-    tibble(data = .) |>
+    tibble(data = _) |>
     unnest_wider(data)
 }
 

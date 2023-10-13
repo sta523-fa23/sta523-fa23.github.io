@@ -145,7 +145,7 @@ schedule:
   day: 1
   lecture: "Web scraping"
   slides: Lec12
-  screencast: 
+  screencast: https://youtu.be/meuZjbfo_Sg
   readings:
   - text: rvest - selector gadget vignette
     link: https://rvest.tidyverse.org/articles/articles/selectorgadget.html

@@ -441,6 +441,48 @@ In readLines(url("https://www.rottentomatoes.com")) :
 
 # Demo 2 - httr2 + headers
 
+## 
+
+::: {.small}
+```{r}
+aaoif = function(
+  resource = c("root", "books", "characters", "houses"), ..., 
+  base_url = "https://www.anapioficeandfire.com/api/", verbose = TRUE
+) {
+  resource = match.arg(resource)
+  
+  if (resource == "root")
+    resource = ""
+  
+  resp = request(base_url) |>
+    req_url_path_append(resource) |>
+    req_url_query(...) |>
+    req_perform()
+  
+  full = list()
+  page = 1
+  
+  repeat {
+    if (verbose) message("Grabbing page ", page)
+    full = c(full, resp_body_json(resp))
+    
+    links = get_links(resp)
+    if (is.null(links[["next"]]))
+      break
+    
+    resp = request(links[["next"]]) |>
+      req_perform()
+    
+    page = page+1
+  }
+  
+  full |>
+    tibble(data = _) |>
+    unnest_wider(data)
+}
+```
+:::
+
 
 ## Exercise 1
 
@@ -452,6 +494,10 @@ Using the AAOIF API answer the following questions:
 
 3. How many houses have an ancestral weapon?
 
+```{r}
+#| echo: false
+countdown::countdown(5)
+```
 
 # Demo 3 - [GitHub API](https://docs.github.com/en/rest/overview)
 

@@ -92,3 +92,7 @@ blockquote {
 .quarto-title-authors {
   justify-content: center;
 }
+
+blockquote > p {
+  margin-bottom: 0.5em !important;
+}

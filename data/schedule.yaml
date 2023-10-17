@@ -155,7 +155,7 @@ schedule:
   day: 3
   lecture: "Web APIs"
   slides: Lec13
-  screencast: 
+  screencast: https://youtu.be/2g2Yl4SkjZk
   readings:
   - text: httr2
     link: https://httr2.r-lib.org/
@@ -166,7 +166,7 @@ schedule:
   day: 1
   lecture: "filesystems, Dennys & LQ scraping"
   screencast: 
-  slides: 
+  slides: Lec14
   readings:
   - text: Project-oriented workflow
     link: https://rstats.wtf/project-oriented-workflow.html

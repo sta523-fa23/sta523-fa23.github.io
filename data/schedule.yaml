@@ -189,7 +189,7 @@ schedule:
 - week: 9
   day: 1
   lecture: "Databases & dplyr"
-  slides: 
+  slides: Lec16
   screencast: 
   readings:
   - text: SQL Translation

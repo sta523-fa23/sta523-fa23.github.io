@@ -1325,29 +1325,37 @@ Dr. Colin Rundel
 </section>
 <section id="blocks" class="slide level2">
 <h2>Blocks</h2>
+<p><br></p>
+<h4 id="cost">Cost:</h4>
 <div class="center">
-<p><em>Cost</em>: Disk &lt;&lt; SSD &lt;&lt;&lt; Memory</p>
+<p>Disk &lt;&lt; SSD &lt;&lt;&lt; Memory</p>
+</div>
+<h4 id="speed">Speed:</h4>
+<div class="center">
+<p>Disk &lt;&lt;&lt; SSD &lt;&lt; Memory</p>
 </div>
 <p><br></p>
-<div class="center">
-<p><em>Speed</em>: Disk &lt;&lt;&lt; SSD &lt;&lt; Memory</p>
-</div>
-<p><br></p>
+<div class="fragment">
 <p>So usually possible to grow our disk storage to accommodate our data. However, memory is usually the limiting resource, and if we can’t fit everything into memory?</p>
-<p><br></p>
+</div>
+<p>
+</p><div class="fragment">
 <p>Create <em>blocks</em> - group related data (i.e. rows) and read in multiple rows at a time. Optimal size will depend on the task and the properties of the disk.</p>
+</div>
 </section>
 <section id="linear-vs-binary-search" class="slide level2">
 <h2>Linear vs Binary Search</h2>
-<p>Even with blocks, any kind of querying / subsetting of rows requires a linear search, which requires <span class="math inline">\(\mathcal{O}(N)\)</span> accesses where <span class="math inline">\(N\)</span> is the number of blocks.</p>
+<p>Even with blocks, any kind of querying / subsetting of rows requires a linear search, which requires <span class="math inline">\(\mathcal{O}(N)\)</span> reads.</p>
+<div class="fragment">
 <p><br></p>
-<p>We can do much better if we are careful about how we structure our data, specifically sorting’ some (or all) of the columns.</p>
+<p>We can do better if we are careful about how we structure our data, specifically sorting’ some (or all) of the columns.</p>
 <ul>
 <li><p>Sorting is expensive, <span class="math inline">\(\mathcal{O}(N \log N)\)</span>, but it only needs to be done once.</p></li>
-<li><p>After sorting, we can use a binary search for any subsetting tasks <span class="math inline">\(\left( \mathcal{O}(\log N) \right)\)</span> ).</p></li>
-<li><p>These “sorted” columns are known as <em>indexes</em>.</p></li>
-<li><p>Indexes require additional storage, but usually small enough to be kept in memory while blocks stay on disk.</p></li>
+<li><p>After sorting, we can use a binary search for any subsetting tasks - <span class="math inline">\(\mathcal{O}(\log N)\)</span> ).</p></li>
+<li><p>In a databases these “sorted” columns are refered to as <em>indexes</em>.</p></li>
+<li><p>Indexes require additional storage, but usually small enough to be kept in memory even if blocks need to stay on disk.</p></li>
 </ul>
+</div>
 </section>
 <section id="and-then" class="slide level2">
 <h2>and then?</h2>
@@ -1398,7 +1406,7 @@ Dr. Colin Rundel
   ..@ loadable.extensions: logi TRUE
   ..@ flags              : int 70
   ..@ vfs                : chr &quot;&quot;
-  ..@ ref                :&lt;environment: 0x13365af60&gt; 
+  ..@ ref                :&lt;environment: 0x126d55040&gt; 
   ..@ bigint             : chr &quot;integer64&quot;
   ..@ extended_types     : logi FALSE</code></pre>
 </div>
@@ -1666,7 +1674,7 @@ Dr. Colin Rundel
   .. .. ..@ loadable.extensions: logi TRUE
   .. .. ..@ flags              : int 70
   .. .. ..@ vfs                : chr &quot;&quot;
-  .. .. ..@ ref                :&lt;environment: 0x134362f60&gt; 
+  .. .. ..@ ref                :&lt;environment: 0x1278aae48&gt; 
   .. .. ..@ bigint             : chr &quot;integer64&quot;
   .. .. ..@ extended_types     : logi FALSE
   ..$ disco: NULL
@@ -1800,13 +1808,12 @@ Dr. Colin Rundel
 <span id="cb55-5"><a href="#cb55-5"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  0.015   0.001   0.016 </code></pre>
+  0.014   0.000   0.015 </code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="fragment">
-<p><br></p>
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell" data-layout-align="center">
@@ -1817,7 +1824,7 @@ Dr. Colin Rundel
 <span id="cb57-5"><a href="#cb57-5"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  0.022   0.004   0.026 </code></pre>
+  0.023   0.004   0.026 </code></pre>
 </div>
 </div>
 </div>

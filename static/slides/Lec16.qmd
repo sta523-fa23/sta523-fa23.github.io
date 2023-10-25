@@ -72,42 +72,49 @@ This is just for *reading* sequential data, if we make any modifications (*writi
 
 ## Blocks
 
+<br/>
+
+#### Cost:
 ::: {.center}
-*Cost*: Disk << SSD <<< Memory
+ Disk << SSD <<< Memory
+:::
+
+
+#### Speed:
+::: {.center}
+Disk <<< SSD << Memory
 :::
 
 <br/>
 
-::: {.center}
-*Speed*: Disk <<< SSD << Memory
-:::
-
-
-<br/>
-
+::: {.fragment}
 So usually possible to grow our disk storage to accommodate our data. However, memory is usually the limiting resource, and if we can't fit everything into memory?
+:::
 
-<br/>
+<p/>
 
+::: {.fragment}
 Create *blocks* - group related data (i.e. rows) and read in multiple rows at a time. Optimal size will depend on the task and the properties of the disk.
-
+:::
 
 
 ## Linear vs Binary Search
 
-Even with blocks, any kind of querying / subsetting of rows requires a linear search, which requires $\mathcal{O}(N)$ accesses where $N$ is the number of blocks.
+Even with blocks, any kind of querying / subsetting of rows requires a linear search, which requires $\mathcal{O}(N)$ reads.
+
+. . .
 
 <br/>
 
-We can do much better if we are careful about how we structure our data, specifically sorting' some (or all) of the columns. 
+We can do better if we are careful about how we structure our data, specifically sorting' some (or all) of the columns. 
 
 * Sorting is expensive, $\mathcal{O}(N \log N)$, but it only needs to be done once. 
 
-* After sorting, we can use a binary search for any subsetting tasks $\left( \mathcal{O}(\log N) \right)$ ).
+* After sorting, we can use a binary search for any subsetting tasks - $\mathcal{O}(\log N)$ ).
 
-* These "sorted" columns are known as *indexes*.
+* In a databases these "sorted" columns are refered to as *indexes*.
 
-* Indexes require additional storage, but usually small enough to be kept in memory while blocks stay on disk.
+* Indexes require additional storage, but usually small enough to be kept in memory even if blocks need to stay on disk.
 
 
 ## and then?
@@ -403,8 +410,6 @@ system.time({
 ::::
 
 . . .
-
-<br/>
 
 :::: {.columns}
 ::: {.column width='50%'}

@@ -44,7 +44,7 @@ Structures Query Language is a special purpose language for interacting with (qu
 ## Connecting via CLI
 
 ```shell
-cr173@trig2 [class_2022_10_28]$ sqlite3 employees.sqlite
+cr173@trig2 [class_2023_10_27]$ sqlite3 employees.sqlite
 
 SQLite version 3.36.0 2021-06-18 18:36:39
 Enter ".help" for usage hints.
@@ -58,41 +58,39 @@ sqlite>
 
 The following is specific to SQLite
 
-```sql
+```shell
 sqlite> .tables
 
-employees
+## employees
 ```
 
-```sql
+```shell
 sqlite> .schema employees
 
-CREATE TABLE `employees` (
-  `name` TEXT,
-  `email` TEXT,
-  `salary` REAL,
-  `dept` TEXT
-);
+## CREATE TABLE `employees` (
+##   `name` TEXT,
+##   `email` TEXT,
+##   `salary` REAL,
+##   `dept` TEXT
+## );
 ```
 
-```sql
+```shell
 sqlite> .indices employees
-
-
 ```
 
 
 ## SELECT Statements
 
-```sql
+```shell
 sqlite> SELECT * FROM employees;
 
-Alice|alice@company.com|52000.0|Accounting
-Bob|bob@company.com|40000.0|Accounting
-Carol|carol@company.com|30000.0|Sales
-Dave|dave@company.com|33000.0|Accounting
-Eve|eve@company.com|44000.0|Sales
-Frank|frank@comany.com|37000.0|Sales
+## Alice|alice@company.com|52000.0|Accounting
+## Bob|bob@company.com|40000.0|Accounting
+## Carol|carol@company.com|30000.0|Sales
+## Dave|dave@company.com|33000.0|Accounting
+## Eve|eve@company.com|44000.0|Sales
+## Frank|frank@comany.com|37000.0|Sales
 ```
 
 
@@ -100,19 +98,19 @@ Frank|frank@comany.com|37000.0|Sales
 
 We can make this table output a little nicer with some additonal SQLite options:
 
-```sql
+```shell
 sqlite> .mode column
 sqlite> .headers on
 sqlite> SELECT * FROM employees;
 
-name        email              salary      dept      
-----------  -----------------  ----------  ----------
-Alice       alice@company.com  52000.0     Accounting
-Bob         bob@company.com    40000.0     Accounting
-Carol       carol@company.com  30000.0     Sales     
-Dave        dave@company.com   33000.0     Accounting
-Eve         eve@company.com    44000.0     Sales     
-Frank       frank@comany.com   37000.0     Sales  
+## name        email              salary      dept      
+## ----------  -----------------  ----------  ----------
+## Alice       alice@company.com  52000.0     Accounting
+## Bob         bob@company.com    40000.0     Accounting
+## Carol       carol@company.com  30000.0     Sales     
+## Dave        dave@company.com   33000.0     Accounting
+## Eve         eve@company.com    44000.0     Sales     
+## Frank       frank@comany.com   37000.0     Sales  
 ```
 
 
@@ -120,17 +118,17 @@ Frank       frank@comany.com   37000.0     Sales
 
 We can subset for certain columns (and rename them) using `SELECT`
 
-```sql
+```shell
 sqlite> SELECT name AS first_name, salary FROM employees;
 
-first_name  salary    
-----------  ----------
-Alice       52000.0   
-Bob         40000.0   
-Carol       30000.0   
-Dave        33000.0   
-Eve         44000.0   
-Frank       37000.0  
+## first_name  salary    
+## ----------  ----------
+## Alice       52000.0   
+## Bob         40000.0   
+## Carol       30000.0   
+## Dave        33000.0   
+## Eve         44000.0   
+## Frank       37000.0  
 ```
 
 
@@ -140,34 +138,36 @@ Frank       37000.0
 We can sort our results by adding `ORDER BY` to our `SELECT` statement
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT name AS first_name, salary FROM employees ORDER BY salary;
 
-first_name  salary    
-----------  ----------
-Carol       30000.0   
-Dave        33000.0   
-Frank       37000.0   
-Bob         40000.0   
-Eve         44000.0   
-Alice       52000.0  
+## first_name  salary    
+## ----------  ----------
+## Carol       30000.0   
+## Dave        33000.0   
+## Frank       37000.0   
+## Bob         40000.0   
+## Eve         44000.0   
+## Alice       52000.0  
 ```
 :::
+
+. . .
 
 We can sort in the opposite order by adding `DESC` 
 
 ::: {.small}
-```sql
+```shell
 SELECT name AS first_name, salary FROM employees ORDER BY salary DESC;
 
-first_name  salary    
-----------  ----------
-Alice       52000.0   
-Eve         44000.0   
-Bob         40000.0   
-Frank       37000.0   
-Dave        33000.0   
-Carol       30000.0  
+## first_name  salary    
+## ----------  ----------
+## Alice       52000.0   
+## Eve         44000.0   
+## Bob         40000.0   
+## Frank       37000.0   
+## Dave        33000.0   
+## Carol       30000.0  
 ```
 :::
 
@@ -176,23 +176,23 @@ Carol       30000.0
 We can filter rows by adding `WHERE` to our statements
 
 ::: {.medium}
-```sql
+```shell
 sqlite> SELECT * FROM employees WHERE salary < 40000;
 
-name        email              salary      dept      
-----------  -----------------  ----------  ----------
-Carol       carol@company.com  30000.0     Sales     
-Dave        dave@company.com   33000.0     Accounting
-Frank       frank@comany.com   37000.0     Sales  
+## name        email              salary      dept      
+## ----------  -----------------  ----------  ----------
+## Carol       carol@company.com  30000.0     Sales     
+## Dave        dave@company.com   33000.0     Accounting
+## Frank       frank@comany.com   37000.0     Sales  
 ```
 
-```sql
+```shell
 sqlite> SELECT * FROM employees WHERE salary < 40000 AND dept = "Sales";
 
-name        email              salary      dept      
-----------  -----------------  ----------  ----------
-Carol       carol@company.com  30000.0     Sales     
-Frank       frank@comany.com   37000.0     Sales 
+## name        email              salary      dept      
+## ----------  -----------------  ----------  ----------
+## Carol       carol@company.com  30000.0     Sales     
+## Frank       frank@comany.com   37000.0     Sales 
 ```
 :::
 
@@ -201,22 +201,22 @@ Frank       frank@comany.com   37000.0     Sales
 We can create groups for the purpose of summarizing using `GROUP BY`. As with dplyr it is not terribly useful by itself.
 
 ::: {.medium}
-```sql
+```shell
 sqlite> SELECT * FROM employees GROUP BY dept;
 
-name        email             salary      dept      
-----------  ----------------  ----------  ----------
-Dave        dave@company.com  33000.0     Accounting
-Frank       frank@comany.com  37000.0     Sales     
+## name        email             salary      dept      
+## ----------  ----------------  ----------  ----------
+## Dave        dave@company.com  33000.0     Accounting
+## Frank       frank@comany.com  37000.0     Sales     
 ```
 
-```sql
+```shell
 sqlite> SELECT dept, COUNT(*) AS n FROM employees GROUP BY dept;
 
-dept        n         
-----------  ----------
-Accounting  3         
-Sales       3   
+## dept        n         
+## ----------  ----------
+## Accounting  3         
+## Sales       3   
 ```
 :::
 
@@ -226,24 +226,24 @@ Sales       3
 We can limit the number of rows we get by using `LIMIT` and order results with `ORDER BY` with or without `DESC`
 
 ::: {.medium}
-```sql
+```shell
 sqlite> SELECT * FROM employees LIMIT 3;
 
-name        email              salary      dept      
-----------  -----------------  ----------  ----------
-Alice       alice@company.com  52000.0     Accounting
-Bob         bob@company.com    40000.0     Accounting
-Carol       carol@company.com  30000.0     Sales 
+## name        email              salary      dept      
+## ----------  -----------------  ----------  ----------
+## Alice       alice@company.com  52000.0     Accounting
+## Bob         bob@company.com    40000.0     Accounting
+## Carol       carol@company.com  30000.0     Sales 
 ```
 
-```sql
+```shell
 sqlite> SELECT * FROM employees ORDER BY name DESC LIMIT 3;
 
-name        email             salary      dept      
-----------  ----------------  ----------  ----------
-Frank       frank@comany.com  37000.0     Sales     
-Eve         eve@company.com   44000.0     Sales     
-Dave        dave@company.com  33000.0     Accounting
+## name        email             salary      dept      
+## ----------  ----------------  ----------  ----------
+## Frank       frank@comany.com  37000.0     Sales     
+## Eve         eve@company.com   44000.0     Sales     
+## Dave        dave@company.com  33000.0     Accounting
 ```
 :::
 
@@ -265,82 +265,58 @@ Using sqlite calculate the following quantities,
 
 ## Import CSV files
 
-```sql
+```shell
 sqlite> .mode csv
 sqlite> .import phone.csv phone
 sqlite> .tables
 
-employees  phone   
+## employees  phone   
 
 sqlite> .mode column
 sqlite> SELECT * FROM phone;
 
-name        phone       
-----------  ------------
-Bob         919 555-1111
-Carol       919 555-2222
-Eve         919 555-3333
-Frank       919 555-4444
+## name        phone       
+## ----------  ------------
+## Bob         919 555-1111
+## Carol       919 555-2222
+## Eve         919 555-3333
+## Frank       919 555-4444
 ```
-
-
-## SQL Joins
-
-![](imgs/sql_joins.png){fig-align="center" width="100%"}
-
-
-##
-
-![](imgs/venn-join1.png){fig-align="center" width="100%"}
-
-
-:::{.aside}
-From Data Geekery SQL Masterclass
-:::
-
-##
-
-![](imgs/venn-cross-join1.png){fig-align="center" width="100%"}
-
-:::{.aside}
-From Data Geekery SQL Masterclass
-:::
-
 
 ## Joins - Default
 
 By default SQLite uses a `CROSS JOIN` which is not terribly useful most of the time (similar to R's `expand.grid()`)
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT * FROM employees JOIN phone;
 
-name        email              salary      dept        name        phone       
-----------  -----------------  ----------  ----------  ----------  ------------
-Alice       alice@company.com  52000.0     Accounting  Bob         919 555-1111
-Alice       alice@company.com  52000.0     Accounting  Carol       919 555-2222
-Alice       alice@company.com  52000.0     Accounting  Eve         919 555-3333
-Alice       alice@company.com  52000.0     Accounting  Frank       919 555-4444
-Bob         bob@company.com    40000.0     Accounting  Bob         919 555-1111
-Bob         bob@company.com    40000.0     Accounting  Carol       919 555-2222
-Bob         bob@company.com    40000.0     Accounting  Eve         919 555-3333
-Bob         bob@company.com    40000.0     Accounting  Frank       919 555-4444
-Carol       carol@company.com  30000.0     Sales       Bob         919 555-1111
-Carol       carol@company.com  30000.0     Sales       Carol       919 555-2222
-Carol       carol@company.com  30000.0     Sales       Eve         919 555-3333
-Carol       carol@company.com  30000.0     Sales       Frank       919 555-4444
-Dave        dave@company.com   33000.0     Accounting  Bob         919 555-1111
-Dave        dave@company.com   33000.0     Accounting  Carol       919 555-2222
-Dave        dave@company.com   33000.0     Accounting  Eve         919 555-3333
-Dave        dave@company.com   33000.0     Accounting  Frank       919 555-4444
-Eve         eve@company.com    44000.0     Sales       Bob         919 555-1111
-Eve         eve@company.com    44000.0     Sales       Carol       919 555-2222
-Eve         eve@company.com    44000.0     Sales       Eve         919 555-3333
-Eve         eve@company.com    44000.0     Sales       Frank       919 555-4444
-Frank       frank@comany.com   37000.0     Sales       Bob         919 555-1111
-Frank       frank@comany.com   37000.0     Sales       Carol       919 555-2222
-Frank       frank@comany.com   37000.0     Sales       Eve         919 555-3333
-Frank       frank@comany.com   37000.0     Sales       Frank       919 555-4444
+## name        email              salary      dept        name        phone       
+## ----------  -----------------  ----------  ----------  ----------  ------------
+## Alice       alice@company.com  52000.0     Accounting  Bob         919 555-1111
+## Alice       alice@company.com  52000.0     Accounting  Carol       919 555-2222
+## Alice       alice@company.com  52000.0     Accounting  Eve         919 555-3333
+## Alice       alice@company.com  52000.0     Accounting  Frank       919 555-4444
+## Bob         bob@company.com    40000.0     Accounting  Bob         919 555-1111
+## Bob         bob@company.com    40000.0     Accounting  Carol       919 555-2222
+## Bob         bob@company.com    40000.0     Accounting  Eve         919 555-3333
+## Bob         bob@company.com    40000.0     Accounting  Frank       919 555-4444
+## Carol       carol@company.com  30000.0     Sales       Bob         919 555-1111
+## Carol       carol@company.com  30000.0     Sales       Carol       919 555-2222
+## Carol       carol@company.com  30000.0     Sales       Eve         919 555-3333
+## Carol       carol@company.com  30000.0     Sales       Frank       919 555-4444
+## Dave        dave@company.com   33000.0     Accounting  Bob         919 555-1111
+## Dave        dave@company.com   33000.0     Accounting  Carol       919 555-2222
+## Dave        dave@company.com   33000.0     Accounting  Eve         919 555-3333
+## Dave        dave@company.com   33000.0     Accounting  Frank       919 555-4444
+## Eve         eve@company.com    44000.0     Sales       Bob         919 555-1111
+## Eve         eve@company.com    44000.0     Sales       Carol       919 555-2222
+## Eve         eve@company.com    44000.0     Sales       Eve         919 555-3333
+## Eve         eve@company.com    44000.0     Sales       Frank       919 555-4444
+## Frank       frank@comany.com   37000.0     Sales       Bob         919 555-1111
+## Frank       frank@comany.com   37000.0     Sales       Carol       919 555-2222
+## Frank       frank@comany.com   37000.0     Sales       Eve         919 555-3333
+## Frank       frank@comany.com   37000.0     Sales       Frank       919 555-4444
 ```
 :::
 
@@ -353,15 +329,15 @@ Frank       frank@comany.com   37000.0     Sales       Frank       919 555-4444
 If you want SQLite to find the columns to merge on automatically then we prefix the join with `NATURAL`.
 
 ::: {.medium}
-```sql
+```shell
 sqlite> SELECT * FROM employees NATURAL JOIN phone;
 
-name        email            salary      dept        phone       
-----------  ---------------  ----------  ----------  ------------
-Bob         bob@company.com  40000.0     Accounting  919 555-1111
-Carol       carol@company.c  30000.0     Sales       919 555-2222
-Eve         eve@company.com  44000.0     Sales       919 555-3333
-Frank       frank@comany.co  37000.0     Sales       919 555-4444
+## name        email            salary      dept        phone       
+## ----------  ---------------  ----------  ----------  ------------
+## Bob         bob@company.com  40000.0     Accounting  919 555-1111
+## Carol       carol@company.c  30000.0     Sales       919 555-2222
+## Eve         eve@company.com  44000.0     Sales       919 555-3333
+## Frank       frank@comany.co  37000.0     Sales       919 555-4444
 ```
 :::
 
@@ -371,15 +347,15 @@ Frank       frank@comany.co  37000.0     Sales       919 555-4444
 ## Inner Join - Explicit
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT * FROM employees JOIN phone ON employees.name = phone.name;
 
-name        email            salary      dept        name        phone       
-----------  ---------------  ----------  ----------  ----------  ------------
-Bob         bob@company.com  40000.0     Accounting  Bob         919 555-1111
-Carol       carol@company.c  30000.0     Sales       Carol       919 555-2222
-Eve         eve@company.com  44000.0     Sales       Eve         919 555-3333
-Frank       frank@comany.co  37000.0     Sales       Frank       919 555-4444
+## name        email            salary      dept        name        phone       
+## ----------  ---------------  ----------  ----------  ----------  ------------
+## Bob         bob@company.com  40000.0     Accounting  Bob         919 555-1111
+## Carol       carol@company.c  30000.0     Sales       Carol       919 555-2222
+## Eve         eve@company.com  44000.0     Sales       Eve         919 555-3333
+## Frank       frank@comany.co  37000.0     Sales       Frank       919 555-4444
 ```
 :::
 
@@ -389,15 +365,15 @@ Frank       frank@comany.co  37000.0     Sales       Frank       919 555-4444
 to avoid the duplicate `name` column we can use `USING` instead of `ON`
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT * FROM employees JOIN phone USING(name);
 
-name   email              salary   dept        phone       
------  -----------------  -------  ----------  ------------
-Bob    bob@company.com    40000.0  Accounting  919 555-1111
-Carol  carol@company.com  30000.0  Sales       919 555-2222
-Eve    eve@company.com    44000.0  Sales       919 555-3333
-Frank  frank@comany.com   37000.0  Sales       919 555-4444
+## name   email              salary   dept        phone       
+## -----  -----------------  -------  ----------  ------------
+## Bob    bob@company.com    40000.0  Accounting  919 555-1111
+## Carol  carol@company.com  30000.0  Sales       919 555-2222
+## Eve    eve@company.com    44000.0  Sales       919 555-3333
+## Frank  frank@comany.com   37000.0  Sales       919 555-4444
 ```
 :::
 
@@ -407,34 +383,34 @@ As a rule, the `USING` (or `NATURAL`) clause is used if the column names match b
 ## Left Join - Natural
 
 ::: {.medium}
-```sql
+```shell
 sqlite> SELECT * FROM employees NATURAL LEFT JOIN phone;
 
-name        email              salary      dept        phone     
-----------  -----------------  ----------  ----------  ----------
-Alice       alice@company.com  52000.0     Accounting            
-Bob         bob@company.com    40000.0     Accounting  919 555-11
-Carol       carol@company.com  30000.0     Sales       919 555-22
-Dave        dave@company.com   33000.0     Accounting            
-Eve         eve@company.com    44000.0     Sales       919 555-33
-Frank       frank@comany.com   37000.0     Sales       919 555-44
+## name        email              salary      dept        phone     
+## ----------  -----------------  ----------  ----------  ----------
+## Alice       alice@company.com  52000.0     Accounting            
+## Bob         bob@company.com    40000.0     Accounting  919 555-11
+## Carol       carol@company.com  30000.0     Sales       919 555-22
+## Dave        dave@company.com   33000.0     Accounting            
+## Eve         eve@company.com    44000.0     Sales       919 555-33
+## Frank       frank@comany.com   37000.0     Sales       919 555-44
 ```
 :::
 
 ## Left Join - Explicit
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT * FROM employees LEFT JOIN phone ON employees.name = phone.name;
 
-name        email              salary      dept        name        phone     
-----------  -----------------  ----------  ----------  ----------  ----------
-Alice       alice@company.com  52000.0     Accounting                        
-Bob         bob@company.com    40000.0     Accounting  Bob         919 555-11
-Carol       carol@company.com  30000.0     Sales       Carol       919 555-22
-Dave        dave@company.com   33000.0     Accounting                        
-Eve         eve@company.com    44000.0     Sales       Eve         919 555-33
-Frank       frank@comany.com   37000.0     Sales       Frank       919 555-44
+## name        email              salary      dept        name        phone     
+## ----------  -----------------  ----------  ----------  ----------  ----------
+## Alice       alice@company.com  52000.0     Accounting                        
+## Bob         bob@company.com    40000.0     Accounting  Bob         919 555-11
+## Carol       carol@company.com  30000.0     Sales       Carol       919 555-22
+## Dave        dave@company.com   33000.0     Accounting                        
+## Eve         eve@company.com    44000.0     Sales       Eve         919 555-33
+## Frank       frank@comany.com   37000.0     Sales       Frank       919 555-44
 ```
 :::
 
@@ -443,17 +419,17 @@ Frank       frank@comany.com   37000.0     Sales       Frank       919 555-44
 As above to avoid the duplicate `name` column we can use `USING`, or can be more selective about our returned columns,
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT employees.*, phone FROM employees LEFT JOIN phone ON employees.name = phone.name;
 
-name   email              salary   dept        phone       
------  -----------------  -------  ----------  ------------
-Alice  alice@company.com  52000.0  Accounting              
-Bob    bob@company.com    40000.0  Accounting  919 555-1111
-Carol  carol@company.com  30000.0  Sales       919 555-2222
-Dave   dave@company.com   33000.0  Accounting              
-Eve    eve@company.com    44000.0  Sales       919 555-3333
-Frank  frank@comany.com   37000.0  Sales       919 555-4444
+## name   email              salary   dept        phone       
+## -----  -----------------  -------  ----------  ------------
+## Alice  alice@company.com  52000.0  Accounting              
+## Bob    bob@company.com    40000.0  Accounting  919 555-1111
+## Carol  carol@company.com  30000.0  Sales       919 555-2222
+## Dave   dave@company.com   33000.0  Accounting              
+## Eve    eve@company.com    44000.0  Sales       919 555-3333
+## Frank  frank@comany.com   37000.0  Sales       919 555-4444
 ```
 :::
 
@@ -475,24 +451,24 @@ Note that SQLite does not support directly support an `OUTER JOIN` (e.g a full j
 We can nest tables within tables for the purpose of queries.
 
 ::: {.medium}
-```sql
+```shell
 SELECT * FROM (SELECT * FROM employees NATURAL LEFT JOIN phone) WHERE phone IS NULL;
 
-name        email              salary      dept        phone     
-----------  -----------------  ----------  ----------  ----------
-Alice       alice@company.com  52000.0     Accounting            
-Dave        dave@company.com   33000.0     Accounting            
+## name        email              salary      dept        phone     
+## ----------  -----------------  ----------  ----------  ----------
+## Alice       alice@company.com  52000.0     Accounting            
+## Dave        dave@company.com   33000.0     Accounting            
 ```
 
-```sql
+```shell
 sqlite> SELECT * FROM (SELECT * FROM employees NATURAL LEFT JOIN phone) WHERE phone IS NOT NULL;
 
-name        email            salary      dept        phone       
-----------  ---------------  ----------  ----------  ------------
-Bob         bob@company.com  40000.0     Accounting  919 555-1111
-Carol       carol@company.c  30000.0     Sales       919 555-2222
-Eve         eve@company.com  44000.0     Sales       919 555-3333
-Frank       frank@comany.co  37000.0     Sales       919 555-4444
+## name        email            salary      dept        phone       
+## ----------  ---------------  ----------  ----------  ------------
+## Bob         bob@company.com  40000.0     Accounting  919 555-1111
+## Carol       carol@company.c  30000.0     Sales       919 555-2222
+## Eve         eve@company.com  44000.0     Sales       919 555-3333
+## Frank       frank@comany.co  37000.0     Sales       919 555-4444
 ```
 :::
 
@@ -507,7 +483,7 @@ Hint - This will require joining a subquery.
 `employees.sqlite` is available in the exercises repo.
 
 <!--
-```sql
+```shell
 sqlite> SELECT *, salary-avg AS diff FROM employees NATURAL JOIN  (SELECT dept, ROUND(AVG(salary),2) AS avg FROM employees GROUP BY dept);
 
 name        email              salary      dept        avg         diff      
@@ -523,7 +499,7 @@ Frank       frank@comany.com   37000.0     Sales       37000.0     0.0
 
 ## Creating an index
 
-```sql
+```shell
 sqlite> CREATE INDEX index_name ON employees (name);
 sqlite> .indices
 
@@ -570,7 +546,7 @@ The database can then be opened from the terminal tab using,
 
 As before we should set a couple of configuration options so that our output is readable, we include `.timer on` so that we get time our queries.
 
-```sql
+```shell
 sqlite> .headers on
 sqlite> .mode column
 sqlite> .timer on
@@ -579,7 +555,7 @@ sqlite> .timer on
 ## `flights`
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT * FROM flights LIMIT 10;
 
 ## year  month  day  dep_time  sched_dep_time  dep_delay  arr_time  sched_arr_time  arr_delay  carrier  flight  tailnum  origin  dest  air_time  distance  hour  minute  time_hour   
@@ -602,7 +578,7 @@ sqlite> SELECT * FROM flights LIMIT 10;
 ## `planes`
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT * FROM planes LIMIT 10;
 
 ## tailnum  year  type                     manufacturer      model      engines  seats  speed  engine   
@@ -631,7 +607,7 @@ Write a query that determines the total number of seats available on all of the 
 ## Incorrect
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT sum(seats) FROM flights NATURAL LEFT JOIN planes;
 
 ## sum(seats)
@@ -656,7 +632,7 @@ Why?
 #### Join and select:
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT sum(seats) FROM flights LEFT JOIN planes USING (tailnum);
 
 ## sum(seats)
@@ -672,7 +648,7 @@ sqlite> SELECT sum(seats) FROM flights LEFT JOIN planes USING (tailnum);
 #### Select then join:
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT sum(seats) FROM (SELECT tailnum FROM flights) LEFT JOIN (SELECT tailnum, seats FROM planes) USING (tailnum);
 
 ## sum(seats)
@@ -687,7 +663,7 @@ sqlite> SELECT sum(seats) FROM (SELECT tailnum FROM flights) LEFT JOIN (SELECT t
 ## `EXPLAIN QUERY PLAN`
 
 ::: {.small}
-```sql
+```shell
 sqlite> EXPLAIN QUERY PLAN SELECT sum(seats) FROM flights 
   LEFT JOIN planes USING (tailnum);
 
@@ -696,7 +672,7 @@ sqlite> EXPLAIN QUERY PLAN SELECT sum(seats) FROM flights
 ## `--SEARCH planes USING AUTOMATIC COVERING INDEX (tailnum=?)
 ```
 
-```sql
+```shell
 sqlite> EXPLAIN QUERY PLAN SELECT sum(seats) FROM (SELECT tailnum FROM flights) 
   LFET JOIN (SELECT tailnum, seats FROM planes) USING (tailnum);
 
@@ -721,13 +697,13 @@ Key things to look for:
 
 ## Adding indexes
 
-```sql
+```shell
 sqlite> CREATE INDEX flight_tailnum ON flights (tailnum);
 
 ## Run Time: real 0.241 user 0.210099 sys 0.027611
 ```
 
-```sql
+```shell
 sqlite> CREATE INDEX plane_tailnum ON planes (tailnum);
 
 ## Run Time: real 0.003 user 0.001407 sys 0.001442
@@ -735,7 +711,7 @@ sqlite> CREATE INDEX plane_tailnum ON planes (tailnum);
 
 . . .
 
-```sql
+```shell
 sqlite> .indexes
 
 ## flight_tailnum  plane_tailnum
@@ -745,7 +721,7 @@ sqlite> .indexes
 ## Improvements?
 
 ::: {.medium}
-```sql
+```shell
 sqlite> SELECT sum(seats) FROM flights LEFT JOIN planes USING (tailnum);
 
 ## sum(seats)
@@ -755,7 +731,7 @@ sqlite> SELECT sum(seats) FROM flights LEFT JOIN planes USING (tailnum);
 ## Run Time: real 0.118 user 0.115899 sys 0.001952
 ```
 
-```sql
+```shell
 sqlite> SELECT sum(seats) FROM (SELECT tailnum FROM flights)
   LEFT JOIN (SELECT tailnum, seats FROM planes) USING (tailnum);
 
@@ -770,7 +746,7 @@ sqlite> SELECT sum(seats) FROM (SELECT tailnum FROM flights)
 ##
 
 ::: {.medium}
-```sql
+```shell
 sqlite> EXPLAIN QUERY PLAN SELECT sum(seats) FROM flights 
   LEFT JOIN planes USING (tailnum);
 
@@ -779,7 +755,7 @@ sqlite> EXPLAIN QUERY PLAN SELECT sum(seats) FROM flights
 ## `--SEARCH planes USING INDEX plane_tailnum (tailnum=?)
 ```
 
-```sql
+```shell
 sqlite> EXPLAIN QUERY PLAN SELECT sum(seats) FROM (SELECT tailnum FROM flights) 
   LEFT JOIN (SELECT tailnum, seats FROM planes) USING (tailnum);
 
@@ -796,7 +772,7 @@ sqlite> EXPLAIN QUERY PLAN SELECT sum(seats) FROM (SELECT tailnum FROM flights)
 ## Filtering
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT origin, count(*) FROM flights WHERE origin = "EWR";
 
 ## origin  count(*)
@@ -806,7 +782,7 @@ sqlite> SELECT origin, count(*) FROM flights WHERE origin = "EWR";
 ## Run Time: real 0.034 user 0.028124 sys 0.005847
 ```
 
-```sql
+```shell
 sqlite> EXPLAIN QUERY PLAN  SELECT origin, count(*) FROM flights WHERE origin = "EWR";
 
 ## QUERY PLAN
@@ -817,7 +793,7 @@ sqlite> EXPLAIN QUERY PLAN  SELECT origin, count(*) FROM flights WHERE origin = 
 . . .
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT origin, count(*) FROM flights WHERE origin != "EWR";
 
 ## origin  count(*)
@@ -827,7 +803,7 @@ sqlite> SELECT origin, count(*) FROM flights WHERE origin != "EWR";
 ## Run Time: real 0.036 user 0.029798 sys 0.006171
 ```
 
-```sql
+```shell
 sqlite> EXPLAIN QUERY PLAN SELECT origin, count(*) FROM flights WHERE origin != "EWR";
 
 ## QUERY PLAN
@@ -841,7 +817,7 @@ sqlite> EXPLAIN QUERY PLAN SELECT origin, count(*) FROM flights WHERE origin != 
 An index can be created on more than one column at a time. This is useful for queries that filter on multiple columns, but note that the order of the columns in the index matters.
 
 ::: {.small}
-```sql
+```shell
 sqlite> CREATE INDEX flights_orig_dest ON flights (origin, dest);
 
 ## Run Time: real 0.267 user 0.232886 sys 0.030270
@@ -852,7 +828,7 @@ sqlite> CREATE INDEX flights_orig_dest ON flights (origin, dest);
 ## Filtering w/ indexes
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT origin, count(*) FROM flights WHERE origin = "EWR";
 
 ## origin  count(*)
@@ -861,7 +837,7 @@ sqlite> SELECT origin, count(*) FROM flights WHERE origin = "EWR";
 ##
 ## Run Time: real 0.007 user 0.006419 sys 0.000159
 ```
-```sql
+```shell
 sqlite> EXPLAIN QUERY PLAN  SELECT origin, count(*) FROM flights WHERE origin = "EWR";
 
 ## QUERY PLAN
@@ -872,7 +848,7 @@ sqlite> EXPLAIN QUERY PLAN  SELECT origin, count(*) FROM flights WHERE origin = 
 . . .
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT origin, count(*) FROM flights WHERE origin != "EWR";
 
 ## origin  count(*)
@@ -886,7 +862,7 @@ sqlite> SELECT origin, count(*) FROM flights WHERE origin != "EWR";
 . . .
 
 :::{.small}
-```sql
+```shell
 sqlite> EXPLAIN QUERY PLAN  SELECT origin, count(*) FROM flights WHERE origin != "EWR";
 
 ## QUERY PLAN
@@ -898,7 +874,7 @@ sqlite> EXPLAIN QUERY PLAN  SELECT origin, count(*) FROM flights WHERE origin !=
 ## `!=` alternative
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT origin, count(*) FROM flights 
   WHERE origin > "EWR" OR origin < "EWR";
 
@@ -909,7 +885,7 @@ sqlite> SELECT origin, count(*) FROM flights
 ## Run Time: real 0.020 user 0.021148 sys 0.001290
 ```
 
-```sql
+```shell
 sqlite> EXPLAIN QUERY PLAN SELECT origin, count(*) FROM flights 
   WHERE origin > "EWR" OR origin < "EWR";
 
@@ -925,7 +901,7 @@ sqlite> EXPLAIN QUERY PLAN SELECT origin, count(*) FROM flights
 ## What about dest?
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT dest, count(*) FROM flights WHERE dest = "LAX";
 
 ## dest  count(*)
@@ -935,7 +911,7 @@ sqlite> SELECT dest, count(*) FROM flights WHERE dest = "LAX";
 ## Run Time: real 0.027 user 0.016513 sys 0.000237
 ```
 
-```sql
+```shell
 sqlite> EXPLAIN QUERY PLAN SELECT dest, count(*) FROM flights WHERE dest = "LAX";
 
 ## QUERY PLAN
@@ -946,7 +922,7 @@ sqlite> EXPLAIN QUERY PLAN SELECT dest, count(*) FROM flights WHERE dest = "LAX"
 . . .
 
 ::: {.small}
-```sql
+```shell
 sqlite> SELECT dest, count(*) FROM flights WHERE dest = "LAX" AND origin = "EWR";
 
 ## dest  count(*)
@@ -956,7 +932,7 @@ sqlite> SELECT dest, count(*) FROM flights WHERE dest = "LAX" AND origin = "EWR"
 ## Run Time: real 0.001 user 0.000729 sys 0.000208
 ```
 
-```sql
+```shell
 sqlite> EXPLAIN QUERY PLAN  SELECT dest, count(*) FROM flights WHERE dest = "LAX" AND origin = "EWR";
 
 ## QUERY PLAN
@@ -969,7 +945,7 @@ sqlite> EXPLAIN QUERY PLAN  SELECT dest, count(*) FROM flights WHERE dest = "LAX
 
 :::: {.columns .small}
 ::: {.column width='50%'}
-```sql
+```shell
 sqlite> SELECT carrier, count(*) FROM flights 
   GROUP BY carrier;
 
@@ -997,7 +973,7 @@ sqlite> SELECT carrier, count(*) FROM flights
 :::
 
 ::: {.column width='50%' .fragment}
-```sql
+```shell
 sqlite> EXPLAIN QUERY PLAN SELECT carrier, count(*) FROM flights GROUP BY carrier;
 
 ## QUERY PLAN
@@ -1010,7 +986,7 @@ sqlite> EXPLAIN QUERY PLAN SELECT carrier, count(*) FROM flights GROUP BY carrie
 ## GROUP with index
 
 ::: {.small}
-```sql
+```shell
 sqlite> CREATE INDEX flight_carrier ON flights (carrier);
 
 ##
@@ -1020,7 +996,7 @@ sqlite> CREATE INDEX flight_carrier ON flights (carrier);
 
 :::: {.columns .small}
 ::: {.column width='50%'}
-```sql
+```shell
 sqlite> SELECT carrier, count(*) FROM flights 
   GROUP BY carrier;
 
@@ -1048,7 +1024,7 @@ sqlite> SELECT carrier, count(*) FROM flights
 :::
 
 ::: {.column width='50%'}
-```sql
+```shell
 sqlite> EXPLAIN QUERY PLAN SELECT carrier, count(*) FROM flights 
   GROUP BY carrier;
 

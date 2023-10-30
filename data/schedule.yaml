@@ -203,7 +203,7 @@ schedule:
   day: 3
   lecture: "SQL & Indexes"
   slides: Lec17
-  screencast: 
+  screencast: https://youtu.be/tM77CTM8uWg
   readings:
   - text: SQLite Syntax
     link: https://www.sqlite.org/lang.html
@@ -213,7 +213,7 @@ schedule:
 - week: 10
   day: 3
   lecture: "Shiny"
-  slides: 
+  slides: Lec18
   screencast: 
   readings:
   - text: Shiny Docs & Gallery

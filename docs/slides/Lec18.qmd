@@ -92,6 +92,66 @@ shinyApp(
 )
 ```
 
+## Sidebar layout
+
+![](imgs/layout-sidebar.png){fig-align="center" width="60%"}
+
+::: aside
+From [Mastering Shiny](https://mastering-shiny.org/action-layout.html#page-with-sidebar)
+:::
+
+## Multi-row layout
+
+![](imgs/layout-fluidrow.png){fig-align="center" width="60%"}
+
+::: aside
+From [Mastering Shiny](https://mastering-shiny.org/action-layout.html#multi-row)
+:::
+
+## Other layouts
+
+- Tabsets 
+    
+  - see `tabsetPanel()`
+
+- Navbars and navlists
+
+  - See `navlistPanel()`
+  
+  - and `navbarPage()`
+
+- Dashboards
+    
+  - [flexdashboard](https://pkgs.rstudio.com/flexdashboard/)
+    
+  - [Shinydashboard](https://rstudio.github.io/shinydashboard/)
+    
+  - [bslib](https://rstudio.github.io/bslib/)
+
+
+## Shiny Widgets Gallery
+
+::: {style="text-align: center"}
+<https://shiny.posit.co/r/gallery/widgets/widget-gallery/>
+:::
+
+<iframe data-src="https://gallery.shinyapps.io/081-widgets-gallery/" width="100%" height="500px" style="border:1px solid;border-radius: 5px;" data-external="1">
+
+</iframe>
+
+
+## A brief widget tour
+
+::: {style="text-align: center"}
+[rundel.shinyapps.io/widgets/](https://rundel.shinyapps.io/widgets/)
+:::
+
+
+<iframe data-src="https://rundel.shinyapps.io/widgets/" width="100%" height="500px" style="border:1px solid;border-radius: 5px;" data-external="1">
+
+</iframe>
+
+
 
 ## App background
 

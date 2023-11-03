@@ -1413,7 +1413,7 @@ Dr. Colin Rundel
 <section id="fixed-layout" class="slide level2">
 <h2>Fixed layout</h2>
 <div class="small">
-<div class="cell columns column-output-location" data-layout-align="center" height="625">
+<div class="cell columns column-output-location" data-layout-align="center" height="525">
 <div class="column">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">library</span>(leaflet)</span>
 <span id="cb7-2"><a href="#cb7-2"></a><span class="fu">page_fillable</span>(</span>
@@ -1423,7 +1423,7 @@ Dr. Colin Rundel
 <span id="cb7-6"><a href="#cb7-6"></a>    lorem<span class="sc">::</span><span class="fu">ipsum</span>(<span class="dv">1</span>,<span class="dv">3</span>)</span>
 <span id="cb7-7"><a href="#cb7-7"></a>  ),</span>
 <span id="cb7-8"><a href="#cb7-8"></a>  <span class="fu">card</span>(</span>
-<span id="cb7-9"><a href="#cb7-9"></a>    <span class="at">max_height =</span> <span class="dv">200</span>,</span>
+<span id="cb7-9"><a href="#cb7-9"></a>    <span class="at">max_height =</span> <span class="dv">100</span>,</span>
 <span id="cb7-10"><a href="#cb7-10"></a>    <span class="fu">card_header</span>(<span class="st">&quot;Card 2&quot;</span>),</span>
 <span id="cb7-11"><a href="#cb7-11"></a>    <span class="st">&quot;This is it.&quot;</span></span>
 <span id="cb7-12"><a href="#cb7-12"></a>  ),</span>
@@ -1434,7 +1434,7 @@ Dr. Colin Rundel
 <span id="cb7-17"><a href="#cb7-17"></a>  )</span>
 <span id="cb7-18"><a href="#cb7-18"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
-<iframe src="out_html/unnamed-chunk-7.html" width="100%" height="625" data-external="1" scrolling="no">
+<iframe src="out_html/unnamed-chunk-7.html" width="100%" height="525" data-external="1" scrolling="no">
 </iframe>
 </div>
 </div>
@@ -1443,7 +1443,7 @@ Dr. Colin Rundel
 <section id="column-layout" class="slide level2">
 <h2>Column layout</h2>
 <div class="small">
-<div class="cell" data-layout-align="center" height="525">
+<div class="cell" data-layout-align="center" height="525" data-codecode-line-numbers="|3-13|14-20">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">library</span>(leaflet)</span>
 <span id="cb8-2"><a href="#cb8-2"></a><span class="fu">page_fillable</span>(</span>
 <span id="cb8-3"><a href="#cb8-3"></a>  <span class="fu">layout_columns</span>(</span>
@@ -1469,14 +1469,14 @@ Dr. Colin Rundel
 
 </div>
 </section>
-<section id="column-layout-output" class="slide level2 output-location-slide"><h2>Column layout</h2><div class="cell output-location-slide" data-layout-align="center" height="525">
+<section id="column-layout-output" class="slide level2 output-location-slide"><h2>Column layout</h2><div class="cell output-location-slide" data-layout-align="center" height="525" data-codecode-line-numbers="|3-13|14-20">
 <iframe src="out_html/unnamed-chunk-8.html" width="100%" height="525" data-external="1" scrolling="no">
 </iframe>
 </div></section><section id="column-widths-layout" class="slide level2">
 <h2>Column widths layout</h2>
 <div class="small">
 <div class="cell" data-layout-align="center" height="625">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">library</span>(leaflet)</span>
+<div class="sourceCode cell-code" id="cb9" data-code-line-numbers="|5|4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">library</span>(leaflet)</span>
 <span id="cb9-2"><a href="#cb9-2"></a><span class="fu">page_fillable</span>(</span>
 <span id="cb9-3"><a href="#cb9-3"></a>  <span class="fu">layout_columns</span>(</span>
 <span id="cb9-4"><a href="#cb9-4"></a>    <span class="at">col_widths =</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">4</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">10</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
@@ -1509,7 +1509,7 @@ Dr. Colin Rundel
 <h2>Dynamic layouts</h2>
 <div class="small">
 <div class="cell" data-layout-align="center" height="525" data-anim="true">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">library</span>(leaflet)</span>
+<div class="sourceCode cell-code" id="cb10" data-code-line-numbers="|2|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">library</span>(leaflet)</span>
 <span id="cb10-2"><a href="#cb10-2"></a><span class="fu">layout_column_wrap</span>(</span>
 <span id="cb10-3"><a href="#cb10-3"></a>  <span class="at">width =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">2</span>,</span>
 <span id="cb10-4"><a href="#cb10-4"></a>  <span class="fu">card</span>(</span>
@@ -1540,7 +1540,7 @@ Dr. Colin Rundel
 <h2>Dynamic layouts - responsive columns</h2>
 <div class="small">
 <div class="cell" data-layout-align="center" height="525" data-anim="true">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">library</span>(leaflet)</span>
+<div class="sourceCode cell-code" id="cb11" data-code-line-numbers="|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">library</span>(leaflet)</span>
 <span id="cb11-2"><a href="#cb11-2"></a><span class="fu">layout_column_wrap</span>( </span>
 <span id="cb11-3"><a href="#cb11-3"></a>  <span class="at">width =</span> <span class="st">&quot;200px&quot;</span>,</span>
 <span id="cb11-4"><a href="#cb11-4"></a>  <span class="fu">card</span>(</span>
@@ -1570,8 +1570,8 @@ Dr. Colin Rundel
 </div></section><section id="nested-layouts" class="slide level2">
 <h2>Nested Layouts</h2>
 <div class="small">
-<div class="cell" data-layout-align="center" height="525">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">library</span>(leaflet)</span>
+<div class="cell" data-layout-align="center" height="450">
+<div class="sourceCode cell-code" id="cb12" data-code-line-numbers="|2,3,20|8,9,19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">library</span>(leaflet)</span>
 <span id="cb12-2"><a href="#cb12-2"></a><span class="fu">layout_column_wrap</span>(</span>
 <span id="cb12-3"><a href="#cb12-3"></a>  <span class="at">width =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">2</span>,</span>
 <span id="cb12-4"><a href="#cb12-4"></a>  <span class="fu">card</span>(</span>
@@ -1594,8 +1594,8 @@ Dr. Colin Rundel
 </div>
 
 </div>
-</section><section id="nested-layouts-output" class="slide level2 output-location-slide"><h2>Nested Layouts</h2><div class="cell output-location-slide" data-layout-align="center" height="525">
-<iframe src="out_html/unnamed-chunk-12.html" width="100%" height="525" data-external="1" scrolling="no">
+</section><section id="nested-layouts-output" class="slide level2 output-location-slide"><h2>Nested Layouts</h2><div class="cell output-location-slide" data-layout-align="center" height="450">
+<iframe src="out_html/unnamed-chunk-12.html" width="100%" height="450" data-external="1" scrolling="no">
 </iframe>
 </div></section></section>
 <section>
@@ -1678,6 +1678,9 @@ Dr. Colin Rundel
 <li><p>and more</p></li>
 </ul>
 <p>The object returned by <code>bs_theme()</code> can be passed to the <code>theme</code> argument of <code>fluidPage()</code> and similar page UI elements.</p>
+<div class="fragment">
+<p>In a Shiny app dynamic theming can be enabled by including <code>bs_themer()</code> in the server function.</p>
+</div>
 </section>
 <section id="thematic" class="slide level2">
 <h2>thematic</h2>

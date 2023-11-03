@@ -226,11 +226,13 @@ schedule:
 
 - week: 11
   day: 1
-  lecture: "Shiny - Cont. (ABC)"
+  lecture: "bslib & dashboards"
   screencast: 
   readings:
-  - text: RStudio Conf 2022 workshops
-    link: https://www.rstudio.com/blog/talks-and-workshops-from-rstudio-conf-2022/#workshop-materials
+  - text: bslib
+    link: https://rstudio.github.io/bslib/
+  - text: Posit Conf 2023 - Shiny Dashboards
+    link: https://posit-conf-2023.github.io/shiny-r-dashboard/
   - text: Awesome Shiny Extensions
     link: https://github.com/nanxstats/awesome-shiny-extensions
     

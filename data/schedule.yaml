@@ -241,7 +241,7 @@ schedule:
 - week: 11
   day: 3
   lecture: "Profiling & Parallelization"
-  slides: 
+  slides: Lec20
   screencast: 
   readings:
   - text: "parallel Vignettes"

@@ -155,7 +155,8 @@ system.time(Sys.sleep(.5))
 
 ::: {.small}
 ```{r}
-cores = c(1,4,8,16)
+#| output-location: column-fragment
+cores = c(1,4,6,8,10)
 order = 6:8
 f = function(x,y) {
   system.time(
@@ -182,6 +183,7 @@ res
 
 Parallelized version of `lapply`
 
+::: {.medium}
 ```{r}
 system.time(rnorm(1e7))
 system.time(unlist(mclapply(1:10, function(x) rnorm(1e6), mc.cores = 2)))
@@ -189,6 +191,7 @@ system.time(unlist(mclapply(1:10, function(x) rnorm(1e6), mc.cores = 4)))
 system.time(unlist(mclapply(1:10, function(x) rnorm(1e6), mc.cores = 8)))
 system.time(unlist(mclapply(1:10, function(x) rnorm(1e6), mc.cores = 10)))
 ```
+:::
 
 
 ## mcparallel
@@ -199,7 +202,9 @@ Asynchronously evaluation of an R expression in a separate process
 m = mcparallel(rnorm(1e6))
 n = mcparallel(rbeta(1e6,1,1))
 o = mcparallel(rgamma(1e6,1,1))
+```
 
+```{r}
 str(m)
 str(n)
 ```
@@ -216,9 +221,12 @@ str(mccollect(list(m,n,o)))
 
 ```{r}
 p = mcparallel(mean(rnorm(1e5)))
-mccollect(p, wait = FALSE, 10) # will retrieve the result (since it's fast)
-mccollect(p, wait = FALSE)     # will signal the job as terminating
-mccollect(p, wait = FALSE)     # there is no longer such a job
+```
+
+```{r}
+mccollect(p, wait = FALSE, 10)
+mccollect(p, wait = FALSE)
+mccollect(p, wait = FALSE)
 ```
 
 # doMC & foreach
@@ -302,13 +310,10 @@ Swapping out `%do%` for `%dopar%` will use the parallel backend.
 
 ```{r}
 registerDoMC(4)
-```
-
-```{r}
 system.time(foreach(i = 1:10) %dopar% mean(rnorm(1e6)))
 registerDoMC(8)
 system.time(foreach(i = 1:10) %dopar% mean(rnorm(1e6)))
-registerDoMC(12)
+registerDoMC(10)
 system.time(foreach(i = 1:10) %dopar% mean(rnorm(1e6)))
 ```
 
@@ -369,9 +374,12 @@ ggplot(d, aes(x,y)) +
 :::
 
 
+# Bootstraping Demo
+
+
 ## What to use when?
 
-Optimal use of multiple cores is hard, there isn't one best solution
+Optimal use of parallelization / multiple cores is hard, there isn't one best solution
 
 * Don't underestimate the overhead cost
 

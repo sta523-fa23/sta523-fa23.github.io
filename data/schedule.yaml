@@ -211,7 +211,7 @@ schedule:
     link: https://gist.github.com/mattmc3/38a85e6a4ca1093816c08d4815fbebfb
 
 - week: 10
-  day: 3
+  day: 1
   lecture: "Shiny"
   slides: Lec18
   screencast: 
@@ -224,8 +224,8 @@ schedule:
     link: https://mastering-shiny.org/
   notes: 
 
-- week: 11
-  day: 1
+- week: 10
+  day: 3
   lecture: "bslib & dashboards"
   slides: Lec19
   screencast: 
@@ -239,7 +239,7 @@ schedule:
     
 
 - week: 11
-  day: 3
+  day: 1
   lecture: "Profiling & Parallelization"
   slides: Lec20
   screencast: 
@@ -251,10 +251,10 @@ schedule:
   notes: 
 
 
-- week: 12
-  day: 1
+- week: 11
+  day: 3
   lecture: "Spatial data"
-  slides: 
+  slides: Lec21
   screencast: 
   readings:
   - text: "sf Vignettes"
@@ -262,13 +262,20 @@ schedule:
   notes: 
   
 - week: 12
-  day: 3
+  day: 1
   lecture: "Tidy Models"
   screencast: 
   slides: 
   readings:
   - text: "Tidy Models - Get Started"
     link: https://www.tidymodels.org/start/
+  notes: 
+
+- week: 12
+  day: 3
+  lecture: "More Tidy Models"
+  screencast: 
+  slides: 
   notes: 
 
 - week: 13

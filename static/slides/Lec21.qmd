@@ -52,7 +52,7 @@ lat_long = c(lat_lines, long_lines) |>
   st_set_crs("+proj=longlat +datum=WGS84 +no_defs")
 ```
 
-```{r echo=FALSE, fig.align="center", message=FALSE, out.width="75%", fig.height=5}
+```{r echo=FALSE, fig.align="center", message=FALSE}
 world = st_as_sf(s2::s2_data_tbl_countries) |>
   st_set_crs("+proj=longlat +datum=WGS84 +no_defs")
 
@@ -94,7 +94,7 @@ How long is the flight between the Western most and the Eastern most points in t
 
 . . .
 
-```{r echo=FALSE, fig.align="center", fig.height=4, fig.width=8, warning=FALSE, message=FALSE, out.width="50%", warning=FALSE}
+```{r echo=FALSE, fig.align="center"}
 par(mar=c(3,3,1,1), mfrow=c(2,1))
 
 ak = st_read("data/ak/states.shp", quiet = TRUE, stringsAsFactors = FALSE)
@@ -165,11 +165,11 @@ lines(inter,col='red',lwd=2,lty=3)
 ::: {.small}
 R has a rich package ecosystem for read/writing, manipulating, and analyzing geospatial data. Some core packages:
 
-* `sp` - core classes for handling spatial data, additional utility functions - **Deprecated**
+* `sp` - ~~core classes for handling spatial data, additional utility functions~~ - **Deprecated**
 
-* `rgdal` - R interface to `gdal` (Geospatial Data Abstraction Library) for reading and writing spatial data - **Deprecated**
+* `rgdal` - ~~R interface to `gdal` (Geospatial Data Abstraction Library) for reading and writing spatial data~~ - **Deprecated**
 
-* `rgeos` - R interface to `geos` (Geometry Engine Open Source) library for querying and manipulating spatial data. Reading and writing WKT. - **Deprecated**
+* `rgeos` - ~~R interface to `geos` (Geometry Engine Open Source) library for querying and manipulating spatial data. Reading and writing WKT.~~ - **Deprecated**
 
 * `raster` - classes and tools for handling spatial raster data.
 
@@ -296,11 +296,18 @@ options(width=85)
 
 ```{r}
 str(nc, max.level=1)
-
 class(nc)
+```
 
+. . .
+
+```{r}class(nc)
 class(nc$geometry)
+```
 
+. . .
+
+```{r}
 class(nc$geometry[[1]])
 ```
 
@@ -618,20 +625,7 @@ ggplot() +
 ```
 
 
-## NC Interstate Highways
-
-::: {.small}
-```{r fig.height=3.5}
-hwy_nc = st_intersection(hwy, nc)
-
-ggplot() + 
-  geom_sf(data=nc) +
-  geom_sf(data=hwy_nc, col='red')
-```
-:::
-
-
-## Counties near a highway (Projection)
+## Intersection
 
 ::: {.small}
 ```{r fig.height=3.5}
@@ -647,7 +641,7 @@ ggplot() +
 :::
 
 
-## Counties near the interstate (Buffering)
+## Buffering
 
 ::: {.small}
 ```{r fig.height=3.5}
@@ -662,7 +656,7 @@ ggplot() +
 :::
 
 
-## Counties near the interstate (Buffering + Union)
+## Buffering + Union
 
 ::: {.small}
 ```{r fig.height=3.5}
@@ -682,7 +676,7 @@ ggplot() +
 
 ::: {.small}
 ```{r}
-#| output-location: column
+#| output-location: slide
 hwy_nc_buffer = hwy_nc |>
   st_buffer(10000) |>
   st_union() |>
@@ -764,6 +758,8 @@ nc_house |>
 nc_house |>
   mutate(reock = st_area(nc_house) / st_area(circs)) |>
   arrange(reock) |>
+  as_tibble() |>
+  select(-geom) |>
   print(n=Inf)
 ```
 :::

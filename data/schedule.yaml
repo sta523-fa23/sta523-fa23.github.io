@@ -290,16 +290,11 @@ schedule:
   day: 3
   lecture: "<i>Thanksgiving break</i>"
 
-- week: 14
-  day: 1
-  lecture: "More Tidy Models"
-  screencast:
-  slides: 
-  notes:
+
 
 - week: 14
-  day: 3
-  lecture: "R Packages"
+  day: 1
+  lecture: "R Package building"
   slides: 
   screencast:
   readings:
@@ -312,3 +307,10 @@ schedule:
   - text: testthat
     link: https://testthat.r-lib.org/
   notes: 
+  
+- week: 14
+  day: 3
+  lecture: "More R Packages"
+  screencast:
+  slides: 
+  notes:

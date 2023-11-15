@@ -11,6 +11,7 @@ format:
     self-contained: true
 execute: 
   echo: true
+  message: true
 ---
 
 ```{r setup}
@@ -30,8 +31,7 @@ library(patchwork)
 ggplot2::theme_set(ggplot2::theme_bw())
 
 options(
-  width=85,
-  tibble.width = 85
+  width=90
 )
 
 library(rstanarm)
@@ -43,9 +43,11 @@ library(rstanarm)
 
 ## Tidymodels
 
+::: {.small}
 ```{r message=TRUE}
 library(tidymodels)
 ```
+:::
 
 ## Book data
 
@@ -89,6 +91,11 @@ linear_reg() |>
 
 ## Building a tidymodel
 
+```{r}
+#| include: false
+options(width=60)
+```
+
 :::: {.columns .small}
 ::: {.column width='50%'}
 ```{r}
@@ -115,8 +122,7 @@ lm(weight ~ volume * cover, data = books)
 :::: {.columns .small}
 ::: {.column width='50%'}
 ```{r}
-lm_b = lm(weight ~ volume * cover, data = books) |>
-  summary()
+lm_b = lm(weight ~ volume * cover, data = books)
 ```
 :::
 
@@ -144,6 +150,11 @@ summary(lm_tm)
 ::::
 
 ##
+
+```{r}
+#| include: false
+options(width=85)
+```
 
 ```{r}
 broom::tidy(lm_tm)
@@ -196,6 +207,8 @@ lm_tm |>
 
 
 ## Why do we care?
+
+. . .
 
 :::: {.columns .small}
 ::: {.column width='50%'}
@@ -274,9 +287,11 @@ broom.mixed::glance(bayes_tm)
 
 ## Augment
 
+::: {.medium}
 ```{r}
 augment(bayes_tm, new_data=books)
 ```
+:::
 
 
 ## Predictions
@@ -331,9 +346,12 @@ More on combining these type of results later, see [`workflows`](https://workflo
 
 ## The Office & IMDB
 
-```{r message=FALSE}
+::: {.medium}
+```{r}
+#| message: false
 (office_ratings = read_csv("data/office_ratings.csv"))
 ```
+:::
 
 ::: {.aside}
 These data are from [data.world](https://data.world/anujjain7/the-office-imdb-ratings-dataset), by way of [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-03-17/readme.md).
@@ -342,7 +360,8 @@ These data are from [data.world](https://data.world/anujjain7/the-office-imdb-ra
 
 ## Rating vs Air Date
 
-```{r echo=FALSE, fig.height=4}
+```{r}
+#| echo: false
 ggplot(office_ratings, aes(x = air_date, y = imdb_rating, color = as_factor(season), size = total_votes)) +
   geom_point() +
   scale_size(trans = "log10", range=c(0.5,4)) +
@@ -390,7 +409,6 @@ set.seed(123)
 ## Feature engineering with dplyr
 
 ```{r}
-#| echo: False
 options(width=100)
 options(tibble.width=100)
 ```
@@ -409,9 +427,6 @@ office_train |>
 
 . . .
 
-<br/>
-<br/>
-
 ::: {.center}
 Anyone see a potential problem with the code above?
 :::
@@ -425,7 +440,7 @@ Anyone see a potential problem with the code above?
 
 ::: {.small}
 ```{r}
-(r = recipe(imdb_rating ~ ., data = office_train))
+r = recipe(imdb_rating ~ ., data = office_train)
 ```  
 :::
 
@@ -441,23 +456,18 @@ summary(r)
 
 ## Recipe roles
 
-:::: {.columns .small}
-::: {.column width='50%'}
+::: {.small}
 ```{r}
-( r = recipe(
-    imdb_rating ~ ., data = office_train
-  ) |> 
-    update_role(title, new_role = "ID")
-)
+r = recipe(
+  imdb_rating ~ ., data = office_train
+) |> 
+  update_role(title, new_role = "ID")
 ```
-:::
 
-::: {.column width='50%'}
 ```{r}
 summary(r)
 ```
 :::
-::::
 
 
 ## Adding features (month & day of week)
@@ -465,12 +475,11 @@ summary(r)
 :::: {.columns .small}
 ::: {.column width='50%'}
 ```{r}
-( r = recipe(
-    imdb_rating ~ ., data = office_train
-  ) |> 
-    update_role(title, new_role = "ID") |>
-    step_date(air_date, features = c("dow", "month"))
-)
+r = recipe(
+  imdb_rating ~ ., data = office_train
+) |> 
+  update_role(title, new_role = "ID") |>
+  step_date(air_date, features = c("dow", "month"))
 ```
 :::
 
@@ -486,9 +495,9 @@ summary(r)
 
 ::: {.small}
 ```{r}
-( r = recipe(
-    imdb_rating ~ ., data = office_train
-  ) |> 
+r = recipe(
+  imdb_rating ~ ., data = office_train
+) |> 
   update_role(title, new_role = "ID") |>
   step_date(air_date, features = c("dow", "month")) |>
   step_holiday(
@@ -496,7 +505,12 @@ summary(r)
     holidays = c("USThanksgivingDay", "USChristmasDay", "USNewYearsDay", "USIndependenceDay"), 
     keep_original_cols = FALSE
   )
-)
+```
+:::
+
+::: {.small}
+```{r}
+summary(r)
 ```
 :::
 
@@ -505,9 +519,9 @@ summary(r)
 
 ::: {.small}
 ```{r}
-( r = recipe(
-    imdb_rating ~ ., data = office_train
-  ) |> 
+r = recipe(
+  imdb_rating ~ ., data = office_train
+) |> 
   update_role(title, new_role = "ID") |>
   step_date(air_date, features = c("dow", "month")) |>
   step_holiday(
@@ -516,7 +530,13 @@ summary(r)
     keep_original_cols = FALSE
   ) |>
   step_num2factor(season, levels = as.character(1:9))
-)
+```
+:::
+
+
+::: {.small}
+```{r}
+summary(r)
 ```
 :::
 
@@ -525,9 +545,9 @@ summary(r)
 
 ::: {.small}
 ```{r}
-( r = recipe(
-    imdb_rating ~ ., data = office_train
-  ) |> 
+r = recipe(
+  imdb_rating ~ ., data = office_train
+) |> 
   update_role(title, new_role = "ID") |>
   step_date(air_date, features = c("dow", "month")) |>
   step_holiday(
@@ -537,7 +557,13 @@ summary(r)
   ) |>
   step_num2factor(season, levels = as.character(1:9)) |>
   step_dummy(all_nominal_predictors())
-)
+```
+:::
+
+
+::: {.small}
+```{r}
+summary(r)
 ```
 :::
 
@@ -545,9 +571,9 @@ summary(r)
 
 ::: {.small}
 ```{r}
-( r = recipe(
-    imdb_rating ~ ., data = office_train
-  ) |> 
+r = recipe(
+  imdb_rating ~ ., data = office_train
+) |> 
   update_role(title, new_role = "ID") |>
   step_date(air_date, features = c("dow", "month")) |>
   step_holiday(
@@ -560,7 +586,13 @@ summary(r)
   step_percentile(total_votes) |>
   step_mutate(top10 = as.integer(total_votes >= 0.9)) |>
   step_rm(total_votes)
-)
+```
+:::
+
+
+::: {.small}
+```{r}
+summary(r)
 ```
 :::
 
@@ -569,6 +601,7 @@ summary(r)
 
 ::: {.small}
 ```{r}
+#| message: true
 prep(r)
 ```
 :::
@@ -686,24 +719,35 @@ knitr::include_graphics("imgs/kfold-cv.png")
 
 ## Creating folds
 
-::: {.small}
+```{r}
+#| include: false
+options(width=55)
+```
+
+:::: {.columns .small}
+::: {.column width='50%'}
 ```{r}
 set.seed(123)
 (folds = vfold_cv(office_train, v=5))
 ```
 :::
 
-. . .
-
-::: {.small}
+::: {.column width='50%' .fragment}
 ```{r}
 (office_fit_folds = office_work |>
   fit_resamples(folds)
 )
 ```
 :::
+::::
+
 
 ## Fold performance
+
+```{r}
+#| include: false
+options(width=85)
+```
 
 ::: {.small}
 ```{r}

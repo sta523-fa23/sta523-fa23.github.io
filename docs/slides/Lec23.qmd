@@ -203,7 +203,7 @@ options(tibble.width = 60)
 
 ## Logistic regression predictions
 
-:::: {.columns}
+:::: {.columns .small}
 ::: {.column width='50%'}
 ```{r}
 ( lr_train_perf = lr_fit |>
@@ -335,17 +335,21 @@ lasso_model = logistic_reg(penalty = tune(), mixture = 1) |>
 
 ##
 
+::: {.small}
 ```{r}
 lasso_model |> 
-  parameters()
+  hardhat::extract_parameter_set_dials()
 ```
+:::
 
 . . .
 
+::: {.small}
 ```{r}
 lasso_model |>
   translate()
 ```
+:::
 
 
 
@@ -421,7 +425,7 @@ lasso_grid |>
 ```
 :::
 
-::: {.column width='50%'}
+::: {.column width='50%' .fragment}
 ```{r}
 lasso_grid |> 
   collect_metrics() |> 
@@ -474,34 +478,39 @@ Since we used `control_grid(save_pred = TRUE)` with `tune_grid()` we can recover
 
 ##
 
-::: {.small}
+:::: {.columns .small}
+::: {.column width='66%'}
 ```{r}
 lasso_train_perf |>
   roc_curve(children, .pred_children) |>
   autoplot()
+```
+:::
 
+::: {.column width='33%'}
+```{r}
 lasso_train_perf |>
   roc_auc(children, .pred_children)
 ```
 :::
+::::
+
 
 ## Re-fitting
 
-Typically with a tuned model we will refit using the complete test data and the "best" parameter value(s),
+Typically with a tuned model we update the workflow (or model) with the optimal parameter values and then refit using the complete training data,
 
+::: {.small}
 ```{r}
-lasso_work_tuned = update_model(
-  lasso_work, 
-  logistic_reg(
-    mixture = 1, 
-    penalty = lasso_best$penalty
-  ) |>
-    set_engine("glmnet")
+lasso_work_tuned = finalize_workflow(
+  lasso_work,
+  lasso_best
 )
 
-lasso_fit = lasso_work_tuned |>
-  fit(data=hotel_train)
+( lasso_fit = lasso_work_tuned |>
+    fit(data=hotel_train) )
 ```
+:::
 
 
 ## Test Performance (out-of-sample)
@@ -606,7 +615,7 @@ dt_work = workflow() |>
 ```
 :::
 
-::: {.column width='50%'}
+::: {.column width='50%' .fragment}
 ```{r}
 doFuture::registerDoFuture()
 future::plan(future::multisession, workers = 8)
@@ -624,6 +633,11 @@ dt_tune = dt_work |>
 ```
 :::
 ::::
+
+. . .
+
+How many decision tree models were fit?
+
 
 ## Tuning results
 
@@ -664,7 +678,7 @@ options(width=60)
 options(tibble.width = 60)
 ```
 
-## Refitting
+## Re-fitting
 
 ::: {.small}
 ```{r}
@@ -672,20 +686,16 @@ options(tibble.width = 60)
   select_best(metric = "roc_auc"))
 ```
 
+. . .
+
 ```{r}
-dt_work_tuned = update_model(
-  dt_work, 
-  decision_tree(
-    tree_depth = dt_best$tree_depth,
-    min_n = dt_best$min_n,
-    cost_complexity = dt_best$cost_complexity
-  ) |>
-    set_engine("rpart") |>
-    set_mode("classification")
+dt_work_tuned = finalize_workflow(
+  dt_work,
+  dt_best
 )
 
-dt_fit = dt_work_tuned |>
-  fit(data=hotel_train)
+( dt_fit = dt_work_tuned |>
+    fit(data=hotel_train))
 ```
 :::
 
@@ -790,7 +800,7 @@ rf_work = workflow() |>
 ## Tuning - automatic grid search
 
 :::: {.columns .small}
-::: {.column width='50%'}
+::: {.column width='40%'}
 ```{r}
 #| include: false
 future::plan(future::multisession, workers = 1)
@@ -808,7 +818,7 @@ rf_tune = rf_work |>
 ```
 :::
 
-::: {.column width='50%' .fragment}
+::: {.column width='60%' .fragment}
 ```{r}
 rf_tune |> 
   collect_metrics() |>
@@ -846,28 +856,22 @@ options(width=60)
 options(tibble.width = 60)
 ```
 
-## Refitting
+## Re-fitting
 
 ::: {.small}
 ```{r}
-(rf_best = rf_tune |>
-  select_best(metric = "roc_auc"))
+rf_best = rf_tune |>
+  select_best(metric = "roc_auc")
 ```
 
 ```{r}
-rf_work_tuned = update_model(
+rf_work_tuned = finalize_workflow(
   rf_work, 
-  rand_forest(
-    trees = 100,
-    mtry = rf_best$mtry, 
-    min_n = rf_best$min_n
-  ) |>
-    set_engine("ranger", num.threads = 8) |>
-    set_mode("classification")
+  rf_best
 )
 
-rf_fit = rf_work_tuned |>
-  fit(data=hotel_train)
+( rf_fit = rf_work_tuned |>
+    fit(data=hotel_train) )
 ```
 :::
 

@@ -39,8 +39,6 @@ R packages are just a collection of files (R code, compiled code, data, document
 
 . . .
 
-When you run `library(pkg)` the functions (and objects) in the package's namespace are attached to the global search path.
-
 ::: {.small}
 ```{r}
 dir(.libPaths())
@@ -49,25 +47,34 @@ dir(.libPaths())
 
 ## Search path
 
+When you run `library(pkg)` the functions (and objects) in the package's namespace are attached to the global search path.
+
+::: {.small}
 ```{r}
 search()
 ```
+:::
 
 . . .
 
+::: {.small}
 ```{r}
 library(diffmatchpatch)
 ```
+:::
 
 . . .
 
+::: {.small}
 ```{r}
 search()
 ```
+:::
+
 
 ## Loading vs attaching
 
-If you do not want to attach a package you can directly use functions via `::` or load it with `requireNamespace()`. 
+If you do not want to attach a package you can directly use package functions via `::` or load the package with `requireNamespace()`. 
 
 :::: {.columns .small}
 ::: {.column width='50%'}
@@ -100,38 +107,50 @@ search()
 
 We've already seen the two primary sources of R packages:
 
-CRAN:
+#### CRAN:
+
+::: {.small}
 ```{r}
 #| eval: False
 install.packages("diffmatchpatch")
 ```
+:::
 
-GitHub:
+#### GitHub:
+
+::: {.small}
 ```{r}
 #| eval: False
 remotes::install_github("rundel/diffmatchpatch")
 ```
+:::
 
 there is one other method that comes up (particularly around package development), which is to install a package from local files.
 
-. . .
+#### Local install:
 
-Local install:
+From the terminal,
 
+::: {.small}
 ```{bash eval=FALSE}
 R CMD install diffmatchpatch_0.1.0.tar.gz
 ```
+:::
 
+or from R,
+
+::: {.small}
 ```{r}
 #| eval: False
 devtools::install("diffmatchpatch_0.1.0.tar.gz")
 ```
+:::
 
 ## What is CRAN
 
 The Comprehensive R Archive Network which is the central repository of R packages.
 
-* Maintained by the R Foundation and run by a team of volunteers, ~19k packages 
+* Maintained by the R Foundation and run by a team of volunteers, ~20k packages 
 
 * Retains all current versions of released packages as well as archives of previous versions
 
@@ -179,11 +198,11 @@ The following components are optional, but quite common:
 
 * `src/` - folder containing code to be compiled (usually C / C++)
 
-* `data/` - folder containing example data sets (exported as `.Rdata` via `save()`)
+* `data/` - folder containing example data sets
 
-* `inst/` - files that will be copied to the package's top-level directory when it is installed (e.g. headers, examples or data files that don't belong in `data/`)
+* `inst/` - files that will be copied to the package's top-level directory when it is installed (e.g. C/C++ headers, examples or data files that don't belong in `data/`)
 
-* `vignettes/` - file(s) implementing long form documentation, can be static (`.pdf` or `.html`) or literate documents (e.g. `.Rmd` or `.Rnw`)
+* `vignettes/` - long form documentation, can be static (`.pdf` or `.html`) or literate documents (e.g. `.qmd`, `.Rmd` or `.Rnw`)
 
 
 ## Package contents
@@ -204,23 +223,22 @@ fs::dir_tree(system.file(package="diffmatchpatch"))
 :::
 ::::
 
-
-# A deeper dive on [diffmatchpatch](https://github.com/rundel/diffmatchpatch)
-
 ## Package Installation
 
 ![](imgs/r_pkg_install.png){fig-align="center" width="80%"}
 
 ::: {.aside}
-From [R Packages - Chap. 4](https://r-pkgs.org/package-structure-state.html#installed-package)
+R Packages (1e) - Chap. 4
 :::
 
 ## Package Installion - Files
 
-![](imgs/r_pkgs_fig.png){fig-align="center" width="55%"}
+![](https://r-pkgs.org/diagrams/package-files.png){fig-align="center" width="50%"}
+
+<!-- ![](imgs/r_pkgs_fig.png){fig-align="center" width="55%"} -->
 
 ::: {.aside}
-From [R Packages - Chap. 4.5](https://r-pkgs.org/package-structure-state.html#bundled-package)
+From [R Packages (2e) - Chap. 3.3](https://r-pkgs.org/structure.html#sec-bundled-package)
 :::
 
 
@@ -237,6 +255,7 @@ What follows is an *opinionated* introduction to package development,
   * usethis
   * roxygen2
 
+* Read and follow along with R Packages (2e) - [Chap. 1 - "The Whole Game"](https://r-pkgs.org/whole-game.html)
 
 #
 
@@ -260,6 +279,19 @@ This is an immensely useful package for automating all kinds of routine (and ted
 # Live demo <br/> Building a Package
 
 
+## Choosing a license
+
+An important early step in developing a package is choosing a license - this is not trivial but is important to do early on, particularly if collaborating with others.
+
+There are many resources available to help you choose a license, including:
+
+::: {.center .large}
+<https://choosealicense.com/>
+:::
+
+
+
+
 # Package data
 
 
@@ -273,7 +305,7 @@ Generally these files are made available by saving a single data object as an `.
 
 * Data is usually compressed, for large data sets it may be worth trying different options (there is a 5 Mb package size limit on CRAN)
 
-* Exported data must be documented (possible via Roxygen)
+* Exported data must be documented (possible via roxygen)
 
 ## Lazy data
 
@@ -331,7 +363,7 @@ If you have data that you want to have access to from within the package but not
 
 ## Raw data files
 
-If you want to include raw data files (e.g `.csv`, shapefiles, etc.) there are generally placed in `inst/` (or a nested forlder) so that they are installed with the package.
+If you want to include raw data files (e.g `.csv`, shapefiles, etc.) there are generally placed in `inst/` (or a nested folder) so that they are installed with the package.
 
 * Accessed using `system.file("dir", package = "package")` after install
 
@@ -340,23 +372,8 @@ If you want to include raw data files (e.g `.csv`, shapefiles, etc.) there are g
 * Example [sf](https://github.com/r-spatial/sf/tree/master/inst)
 
 
-# Package checking
-
-## `R CMD check`
-
-Last time we saw the usage of `R CMD check`, or rather `Build > Check Package` from within RStudio.
-
-This is a good idea to run regularly to make sure nothing is broken and you are meeting the important package quality standards, but this only in the context of your machine, your version of R, your OS, and so on.
-
-If using GitHub it is highly recommended that you run `usethis::use_github_action_check_standard()` to enable GitHub actions checks of the package each time it is pushed.
-
-On each push this runs R CMD check on:
-  * Latest R on MacOS, Windows, Linux (Ubuntu)
-  * Previous and devel version of R on Linux (Ubuntu)
-
 
 # Package vigenette
-
 
 ## Vignette
 
@@ -382,6 +399,22 @@ These are an un-official extension to vignettes where package authors wish to in
 * Use `usethis::use_article()` to create
 
 * Files are added to `vignette/articles/` which is added to `.Rbuildignore`
+
+
+# Package checking
+
+## `R CMD check`
+
+Last time we saw the usage of `R CMD check`, or rather `Build > Check Package` from within RStudio.
+
+This is a good idea to run regularly to make sure nothing is broken and you are meeting the important package quality standards, but this only in the context of your machine, your version of R, your OS, and so on.
+
+If using GitHub it is highly recommended that you run `usethis::use_github_action_check_standard()` to enable GitHub actions checks of the package each time it is pushed.
+
+On each push this runs R CMD check on:
+  * Latest R on MacOS, Windows, Linux (Ubuntu)
+  * Previous and devel version of R on Linux (Ubuntu)
+
 
 
 # Package testing
@@ -431,14 +464,4 @@ From the bottom up,
   
 * multiple test groups are combined into a file
 
-
-# Package publishing
-
-![](imgs/hex_pkgdown.png){fig-align="center" width="40%"}
-
-## CRAN
-
-More details than we can get into today, but see the the Release a package chapter of R Pkgs for more details.
-
-* `devtools::release()` will take you through a number of basic checks and if everything is good upload your package to the submission queue of CRAN.
 

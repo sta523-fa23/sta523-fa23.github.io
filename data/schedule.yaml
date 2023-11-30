@@ -310,7 +310,14 @@ schedule:
   
 - week: 14
   day: 3
-  lecture: "More R Packages"
-  screencast:
+  lecture: "Rcpp"
+  screencast: Lec25
   slides: 
   notes:
+  readings:
+  - text: Rcpp Gallery
+    link: https://gallery.rcpp.org/
+  - text: Advanced R - Rcpp
+    link: https://adv-r.hadley.nz/rcpp.html
+  - text: Seamless R and C++ Integration with Rcpp
+    link: https://link.springer.com/book/10.1007/978-1-4614-6868-4

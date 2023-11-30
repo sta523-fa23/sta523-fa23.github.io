@@ -1,0 +1,981 @@
+---
+title: "Rcpp"
+subtitle: "Lecture 25"
+author: "Dr. Colin Rundel"
+footer: "Sta 523 - Fall 2023"
+format:
+  revealjs:
+    theme: slides.scss
+    transition: fade
+    slide-number: true
+    self-contained: true
+execute: 
+  echo: true
+---
+
+```{r setup}
+#| message: False
+#| warning: False
+#| include: False
+knitr::opts_chunk$set(
+  fig.align = "center", fig.retina = 2, dpi = 150
+)
+
+library(tidyverse)
+library(Rcpp)
+```
+
+## Rcpp
+
+::: {.small}
+> The Rcpp package integrates R and C++ via R functions and a (header-only) C++ library.
+>
+> All underlying R types and objects, i.e., everything a `SEXP` represents internally in R, are matched to corresponding C++ objects. This covers anything from vectors, matrices or lists to environments, functions and more. Each `SEXP` variant is automatically mapped to a dedicated C++ class. For example, numeric vectors are represented as instances of the `Rcpp::NumericVector` class, environments are represented as instances of `Rcpp::Environment`, functions are represented as `Rcpp::Function`, etc ... 
+:::
+
+. . .
+
+::: {.small}
+From "Extending R with C++: A Brief Introduction to Rcpp":
+
+> R has always provided an application programming interface (API) for extensions. Based on the C language, it uses a number of macros and other low-level constructs to exchange data structures between the R process and any dynamically-loaded component modules authors added to it. With the introduction of the Rcpp package, and its later refinements, this process has become considerably easier yet also more robust. By now, Rcpp has become the most popular extension mechanism for R. 
+:::
+
+## C++ Types
+
+::: {.medium}
+| Type                 | Size            | Description                            | Value Range
+|----------------------|:---------------:|----------------------------------------|-------------------------------------
+| `bool`               | 1*              | Logical value: `true` or `false`       | `true` or `false`
+| `char`               | 8               | Character (ASCII or UTF8)              | $\pm 127$
+| `short int`          | 16              | Small integers                         | $\pm 3.27 \cdot 10^4$
+| `int`                | 32              | Medium integers                        | $\pm 2.14 \cdot 10^9$
+| `long int`           | 64              | Large integers                         | $\pm 9.22 \cdot 10^18$
+| `float`              | 32              | Small floating point value             | $\pm 10^{-38}$ to $\pm 10^{38}$
+| `double`             | 64              | Large floating point value             | $\pm 10^{-308}$ to $\pm 10^{308}$
+:::
+
+\+ many many more
+
+## R types vs C++ types
+
+::: {.medium}
+All of the basic types in R are vectors by default, in C++ the types we just discussed are all scalar. So it is necessary to have one more level of abstraction to translate between the two. Rcpp provides for this with several built in classes:
+:::
+
+::: {.small}
+| C++ type (scalar)      |  Rcpp Class              | R type (`typeof`) |
+|------------------------|--------------------------|-------------------|
+| `int`                  | `Rcpp::IntegerVector`    | `integer`         |
+| `double`               | `Rcpp::NumericVector`    | `numeric `        |
+| `bool`                 | `Rcpp::LogicalVector`    | `logical`         |
+| `std::string`          | `Rcpp::CharacterVector`  | `character`       |
+| `char`                 | `Rcpp::RawVector`        | `raw `            |
+| `std::complex<double>` | `Rcpp::ComplexVector`    | `complex `        |
+|                        | `Rcpp::List`             | `list`            |
+|                        | `Rcpp::Environment`      | `environment`     |
+|                        | `Rcpp::Function`         | `function`        |
+|                        | `Rcpp::XPtr`             | `externalptr`     |
+|                        | `Rcpp::S4`               | `S4`              |
+:::
+
+## Trying things out
+
+Rcpp provides some helpful functions for trying out simple C++ expressions (`evalCpp`), functions (`cppFunction`), or cpp files (`sourceCpp`). It is even possible to include C++ code in Rmd / qmd documents using the Rcpp [engine](https://bookdown.org/yihui/rmarkdown/language-engines.html#rcpp).
+
+```{r}
+evalCpp("2+2")
+
+evalCpp("2+2") |> typeof()
+
+evalCpp("2+2.") |> typeof()
+```
+
+## What's happening?
+
+::: {.small}
+```{r}
+evalCpp("2+2", verbose = TRUE, rebuild = TRUE)
+```
+:::
+
+## C++ functions as R functions
+
+```{r, error=TRUE}
+cppFunction('
+  double cpp_mean(double x, double y) {
+    return (x+y)/2;
+  }
+')
+```
+
+:::: {.columns .small}
+::: {.column width='50%'}
+```{r}
+cpp_mean
+cpp_mean(1,2)
+cpp_mean(TRUE,2L)
+```
+:::
+
+::: {.column width='50%' .fragment}
+```{r error=TRUE}
+cpp_mean(1,"A")
+cpp_mean(c(1,2), c(1,2))
+```
+:::
+::::
+
+
+## Using `sourceCpp`
+
+This allows for an entire `.cpp` source file to be compiled and loaded into R. This is generally the preferred way of working with C++ code and is well supported by RStudio (i.e. provides syntax highlights, tab completion, etc.)
+
+::: {.small}
+* Make sure to include the Rcpp header
+
+```cpp
+#include <Rcpp.h>
+```
+
+* If you hate typing `Rcpp::` everywhere, include the namespace
+
+```cpp
+using namespace Rcpp;
+```
+
+* Specify any desired plugins with 
+
+```cpp
+// [[Rcpp::plugins(cpp11)]]
+```
+
+* Prefix any functions that will be exported with R with 
+
+```cpp
+// [[Rcpp::export]]
+```
+
+* Testing code can be included using an R code block:
+
+```cpp
+/*** R
+# This R code will be run automatically
+*/
+```
+:::
+
+
+## Example
+
+The following would be avaiable as a file called `mean.cpp` or similar.
+
+```{Rcpp}
+#include <Rcpp.h>
+
+//[[Rcpp::plugins(cpp11)]]
+
+//[[Rcpp::export]]
+double cpp_mean(double x, double y) {
+  return (x+y)/2;
+}
+
+/*** R
+x <- runif(1e5)
+bench::mark(
+  cpp_mean(1, 2),
+  mean(c(1, 2))
+)
+*/
+```
+
+
+## `for` loops
+
+In C & C++ `for` loops are traditionally constructed as,
+
+```c
+for(initialization; end condition; increment) {
+  //...loop code ..
+}
+```
+
+. . .
+
+```{Rcpp}
+#include <Rcpp.h>
+
+//[[Rcpp::export]]
+double cpp_mean(Rcpp::NumericVector x) {
+  double sum = 0.0;
+  for(int i=0; i != x.size(); i++) {
+    sum += x[i];
+  }
+  return sum/x.size();
+}
+```
+
+```{r}
+cpp_mean(1:10)
+```
+
+
+## Range based for loops (C++11)
+
+Since the adoption of the C++11 standard there is an alternative for loop syntax, 
+
+```{Rcpp}
+#include <Rcpp.h>
+//[[Rcpp::plugins(cpp11)]]
+
+//[[Rcpp::export]]
+double cpp11_mean(Rcpp::NumericVector x) {
+  double sum = 0.0;
+  for(auto v : x) {
+    sum += v;
+  }
+  
+  return sum/x.size();
+}
+```
+
+```{r}
+cpp11_mean(1:10)
+```
+
+. . .
+
+## Available plugins?
+
+```{r}
+ls(envir = Rcpp:::.plugins)
+```
+
+
+## Rcpp Sugar
+
+Rcpp also attempts to provide many of the base R functions within the C++ scope, generally these are referred to as Rcpp Sugar, more can be found [here](http://dirk.eddelbuettel.com/code/rcpp/Rcpp-sugar.pdf) or by examining the Rcpp source.
+
+```{Rcpp}
+#include <Rcpp.h>
+//[[Rcpp::plugins(cpp11)]]
+
+//[[Rcpp::export]]
+double rcpp_mean(Rcpp::NumericVector x) {
+  return Rcpp::mean(x);
+}
+```
+
+```{r}
+rcpp_mean(1:10)
+```
+
+## Edge cases
+
+:::: {.columns .small}
+::: {.column width='33%'}
+```{r}
+x = c(1:10,NA)
+typeof(x)
+
+mean(x)
+cpp_mean(x)
+cpp11_mean(x)
+rcpp_mean(x)
+```
+:::
+
+::: {.column width='33%' .fragment}
+```{r}
+x = c(1:10,NA_real_)
+typeof(x)
+
+mean(x)
+cpp_mean(x)
+cpp11_mean(x)
+rcpp_mean(x)
+```
+:::
+
+::: {.column width='33%' .fragment}
+```{r}
+y = c(1:10,Inf)
+typeof(y)
+
+mean(y)
+cpp_mean(y)
+cpp11_mean(y)
+rcpp_mean(y)
+```
+:::
+::::
+
+## Integer mean
+
+::: {.small}
+```{Rcpp}
+#include <Rcpp.h>
+//[[Rcpp::plugins(cpp11)]]
+
+//[[Rcpp::export]]
+double cpp_imean(Rcpp::IntegerVector x) {
+  double sum = 0.0;
+  for(int i=0; i != x.size(); i++) {
+    sum += x[i];
+  }
+  
+  return sum/x.size();
+}
+
+//[[Rcpp::export]]
+double cpp11_imean(Rcpp::IntegerVector x) {
+  double sum = 0.0;
+  for(auto v : x) {
+    sum += v;
+  }
+  
+  return sum/x.size();
+}
+
+//[[Rcpp::export]]
+double rcpp_imean(Rcpp::IntegerVector x) {
+  return Rcpp::mean(x);
+}
+```
+:::
+
+
+## Integer edge cases
+
+:::: {.columns .small}
+::: {.column width='33%'}
+```{r}
+x = c(1:10,NA)
+typeof(x)
+
+mean(x)
+cpp_imean(x)
+cpp11_imean(x)
+rcpp_imean(x)
+```
+:::
+
+::: {.column width='33%'}
+```{r}
+x = c(1:10,NA_real_)
+typeof(x)
+
+mean(x)
+cpp_imean(x)
+cpp11_imean(x)
+rcpp_imean(x)
+```
+:::
+
+::: {.column width='33%'}
+```{r}
+y = c(1:10,Inf)
+typeof(y)
+
+mean(y)
+cpp_imean(y)
+cpp11_imean(y)
+rcpp_imean(y)
+```
+:::
+::::
+
+## Missing values - C++ Scalars
+
+From Hadley's [Adv-R](http://adv-r.had.co.nz) [Rcpp chapter](http://adv-r.had.co.nz/Rcpp.html#rcpp-na),
+
+::: {.small}
+```{Rcpp}
+#include <Rcpp.h>
+
+// [[Rcpp::export]]
+Rcpp::List scalar_missings() {
+  int int_s          = NA_INTEGER;
+  Rcpp::String chr_s = NA_STRING;
+  bool lgl_s         = NA_LOGICAL;
+  double num_s       = NA_REAL;
+
+  return Rcpp::List::create(int_s, chr_s, lgl_s, num_s);
+}
+```
+
+```{r}
+scalar_missings() |> str()
+```
+:::
+
+## Missing values - Rcpp Vectors
+
+```{Rcpp}
+#include <Rcpp.h>
+
+// [[Rcpp::export]]
+Rcpp::List vector_missing() {
+  return Rcpp::List::create(
+    Rcpp::NumericVector::create(NA_REAL),
+    Rcpp::IntegerVector::create(NA_INTEGER),
+    Rcpp::LogicalVector::create(NA_LOGICAL),
+    Rcpp::CharacterVector::create(NA_STRING)
+  );
+}
+```
+
+```{r}
+vector_missing() |> str()
+```
+
+
+
+
+## Performance
+
+::: {.small}
+```{r}
+r_mean = function(x) {
+  sum = 0
+  for(v in x) {
+    sum = sum + v
+  }
+  sum / length(x)
+}
+```
+
+```{r}
+y = seq_len(1e6)
+bench::mark(
+  mean(y),
+  cpp_mean(y),
+  cpp11_mean(y),
+  rcpp_mean(y),
+  r_mean(y)
+) 
+```
+:::
+
+## `bench::press`
+
+:::: {.columns .small}
+::: {.column width='33%'}
+```{r cache=TRUE}
+b = bench::press(
+  n = 10^c(3:7),
+  {
+    y = sample(seq_len(n))
+    bench::mark(
+      mean(y),
+      cpp_mean(y),
+      cpp11_mean(y),
+      rcpp_mean(y),
+      r_mean(y)
+    )
+  }
+)
+```
+:::
+
+::: {.column width='66%'}
+```{r echo=FALSE, out.width="100%", dpi=150, fig.height=5}
+b |>
+  mutate(
+    n = format(n, scientific = FALSE, trim=TRUE),
+    expression = as.character(expression)
+  ) |>
+  ggplot(aes(x = n, y = as.numeric(median), color = expression)) +
+    geom_point(size=2) +
+    theme(legend.position="bottom") +
+    labs(x = "n", color="", y = "time") +
+    scale_y_log10()
+```
+:::
+::::
+
+
+
+## Creating a `list`
+
+::: {.small}
+```{Rcpp}
+#include <Rcpp.h>
+
+// [[Rcpp::export]]
+Rcpp::List make_list(int n) {
+  return Rcpp::List::create(
+    Rcpp::Named("norm") = Rcpp::rnorm(n, 0, 1),
+    Rcpp::Named("beta") = Rcpp::rbeta(n, 1, 1),
+    Rcpp::IntegerVector::create(1,2,3,4,5, NA_INTEGER)
+  );
+}
+```
+
+```{r}
+make_list(10)
+```
+:::
+
+## Creating a `data.frame`
+
+::: {.small}
+```{Rcpp}
+#include <Rcpp.h>
+
+// [[Rcpp::export]]
+Rcpp::DataFrame make_df(int n) {
+  return Rcpp::DataFrame::create(
+    Rcpp::Named("norm") = Rcpp::rnorm(n, 0, 1),
+    Rcpp::Named("beta") = Rcpp::rbeta(n, 1, 1)
+  );
+}
+```
+
+```{r}
+make_df(10)
+```
+:::
+
+
+## Creating a `tbl`
+
+::: {.small}
+```{Rcpp}
+#include <Rcpp.h>
+
+// [[Rcpp::export]]
+Rcpp::DataFrame make_tbl(int n) {
+  Rcpp::DataFrame df = Rcpp::DataFrame::create(
+    Rcpp::Named("norm") = Rcpp::rnorm(n, 0, 1),
+    Rcpp::Named("beta") = Rcpp::rbeta(n, 1, 1)
+  );
+  df.attr("class") = Rcpp::CharacterVector::create("tbl_df", "tbl", "data.frame");
+  
+  return df;
+}
+```
+
+```{r}
+make_tbl(10)
+```
+:::
+
+
+## Printing
+
+R has some weird behavior when it comes to printing text from C++, Rcpp has function that resolves this, `Rcout` 
+
+```{Rcpp}
+#include <Rcpp.h>
+
+// [[Rcpp::export]]
+void n_hello(int n) {
+  for(int i=0; i!=n; ++i) {
+    Rcpp::Rcout << i+1 << ". Hello world!\n";
+  }
+}
+```
+
+```{r}
+n_hello(5)
+```
+
+
+## Printing `NA`s
+
+```{Rcpp}
+#include <Rcpp.h>
+
+// [[Rcpp::export]]
+void print_na() {
+  Rcpp::Rcout << "NA_INTEGER : " << NA_INTEGER << "\n";
+  Rcpp::Rcout << "NA_STRING  : " << NA_STRING  << "\n";
+  Rcpp::Rcout << "NA_LOGICAL : " << NA_LOGICAL << "\n";
+  Rcpp::Rcout << "NA_REAL    : " << NA_REAL    << "\n";
+}
+```
+
+```{r}
+print_na()
+```
+
+
+## SEXP Conversion
+
+Rcpp attributes provides a bunch of convenience tools that handle much of the conversion from R SEXP's to C++ / Rcpp types and back. Some times it is necessary to handle this directly.
+
+::: {.small}
+```{Rcpp}
+#include <Rcpp.h>
+
+// [[Rcpp::export]]
+SEXP as_wrap(SEXP input) {
+  Rcpp::NumericVector r = Rcpp::as<Rcpp::NumericVector>(input);
+  Rcpp::NumericVector rev_r = Rcpp::rev(r);
+  
+  return Rcpp::wrap(rev_r);
+}
+```
+:::
+
+:::: {.columns .small}
+::: {.column width='50%'}
+```{r}
+as_wrap(1:10)
+```
+
+```{r}
+as_wrap(c(1,2,3))
+```
+:::
+
+::: {.column width='50%'}
+```{r}
+#| error: true
+as_wrap(c("A","B","C"))
+```
+:::
+::::
+
+
+# RcppArmadillo
+
+## Armadillo
+
+```{r echo=FALSE, fig.align="center", out.width="66%"}
+knitr::include_graphics("imgs/arma.png")
+```
+
+<br/>
+
+* Developed by Dr. Conrad Sanderson and Dr Ryan Curtin 
+
+* Template based linear algebra library with high level syntax (like R or Matlab)
+
+* Heavy lifting is (mostly) handled by LAPACK (i.e. benefits from OpenBLAS)
+
+* Supports vectors, matrices, and cubes in dense or sparse format
+
+* Some builtin expression optimization via template meta-programming
+
+* Header only or shared library versions available
+
+## Basic types
+
+Armadillo has 4 basic (dense) templated types:
+
+::: {.center}
+```c++
+arma::Col<type>,
+arma::Row<type>, 
+arma::Mat<type>, 
+arma::Cube<type>
+```
+:::
+
+<br/>
+
+These types can be specialized using one of the following data types:
+
+::: {.center}
+```c++
+float, double,
+std::complex<float>, std::complex<double>, 
+short, int, long, 
+unsigned short, unsigned int, unsigned long
+```
+:::
+
+
+## typedef Shortcuts
+
+For convenience the following typedefs are defined:
+
+* Vectors:
+
+::: {.center .small}
+```c++
+arma::vec     = arma::colvec     =  arma::Col<double>
+arma::dvec    = arma::dcolvec    =  arma::Col<double>
+arma::fvec    = arma::fcolvec    =  arma::Col<float>
+arma::cx_vec  = arma::cx_colvec  =  arma::Col<cx_double>
+arma::cx_dvec = arma::cx_dcolvec =  arma::Col<cx_double>
+arma::cx_fvec = arma::cx_fcolvec =  arma::Col<cx_float>
+arma::uvec    = arma::ucolvec    =  arma::Col<uword>
+arma::ivec    = arma::icolvec    =  arma::Col<sword>
+```
+:::
+
+* Matrices
+
+::: {.center .small}
+```c++
+arma::mat     = arma::Mat<double>
+arma::dmat    = arma::Mat<double>
+arma::fmat    = arma::Mat<float>
+arma::cx_mat  = arma::Mat<cx_double>
+arma::cx_dmat = arma::Mat<cx_double>
+arma::cx_fmat = arma::Mat<cx_float>
+arma::umat    = arma::Mat<uword>
+arma::imat    = arma::Mat<sword>
+```
+:::
+
+
+## RcppArmadillo
+
+* Written and maintained by Dirk Eddelbuettel, Romain Francois, Doug Bates and Binxiang Ni
+
+* Provides the header only version of Armadillo along with additional wrappers
+  * Wrappers provide easy conversion between Rcpp types and Armadillo types
+  * Enables use of Rcpp attributes and related tools
+  
+* Requirements - include the following in your C++ code
+
+::: {.center}
+```c++
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
+```
+:::
+
+
+## Example Program
+
+::: {.medium}
+```{Rcpp}
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
+
+// [[Rcpp::export]]
+arma::mat test_randu(int n, int m) {
+  arma::mat A = arma::randu<arma::mat>(n,m);
+  return A;
+}
+```
+:::
+
+:::: {.columns .medium}
+::: {.column width='50%'}
+```{r}
+test_randu(4,5)
+```
+:::
+
+::: {.column width='50%'}
+```{r}
+test_randu(3,1)
+```
+:::
+::::
+
+
+## arma class attributes
+
+::: {.medium}
+| Attribute      | Description                                                               |
+|----------------|---------------------------------------------------------------------------|
+| `.n_rows`      | number of rows; present in Mat, Col, Row, Cube, field and SpMat           |
+| `.n_cols`      | number of columns; present in Mat, Col, Row, Cube, field and SpMat        |
+| `.n_elem`      | total number of elements; present in Mat, Col, Row, Cube, field and SpMat |
+| `.n_slices`    | number of slices; present in Cube and field                               |
+:::
+
+##
+
+```{Rcpp}
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
+
+// [[Rcpp::export]]
+void test_attr(arma::mat m) {
+  Rcpp::Rcout << "m.n_rows = " << m.n_rows << "\n";
+  Rcpp::Rcout << "m.n_cols = " << m.n_cols << "\n";
+  Rcpp::Rcout << "m.n_elem = " << m.n_elem << "\n";
+}
+```
+
+:::: {.columns}
+::: {.column width='50%'}
+```{r, error=TRUE}
+test_attr(matrix(0, 3, 3))
+test_attr(matrix(1, 4, 5))
+```
+:::
+
+::: {.column width='50%'}
+```{r, error=TRUE}
+test_attr(1:10)
+test_attr(as.matrix(1:10))
+```
+:::
+::::
+
+
+## Element access
+
+For an  `arma::vec v`,
+
+::: {.medium}
+| Call        |  Description                                        |
+|-------------|-----------------------------------------------------|
+| `v(i)`      | Access the `i`-th element with bounds checking        |
+| `v.at(i)`   | Access the `i`-th element without bounds checking     |
+| `v[i]`      | Access the `i`-th element without bounds checking     |
+:::
+
+For an `arma::mat m`,
+
+::: {.medium}
+| Call        |  Description                                        |
+|-------------|-----------------------------------------------------|
+| `m(i)`      | Access the `i`-th element, treating object as flat and in column major order |
+| `m(i,j)`    | Access the element in `i`-th row and `j`-th column with bounds checking      |
+| `m.at(i,j)` | Access the element in `i`-th row and `j`-th column without bounds checking   |
+:::
+
+## Element access - Cubes
+
+For an `arma::cube c`,
+
+::: {.medium}
+| Call         | Description                                        |
+|--------------|------------------------------------------------------|
+| `c(i)`       | Access the i-th element, treating object as flat and in column major order |
+| `c(i,j,k)`   | Access the element in `i`-th row, `j`-th column, and `k`-th slice with bounds checking      |
+| `c.at(i,j,k)`| Access the element in `i`-th row, `j`-th column, and `k`-th slice without bounds checking   |
+:::
+
+## Data Organization
+
+```{r echo=FALSE, fig.align="center", out.width="100%"}
+knitr::include_graphics("imgs/colmajor.jpg")
+```
+
+
+::: {.aside}
+[Image source](https://scc.ustc.edu.cn/zlsc/tc4600/intel/2017.0.098/mkl/common/mkl_userguide/GUID-ABCC618B-43C4-4DCD-ADA2-6F061B5116CD.html)
+:::
+
+##
+
+::: {.medium}
+```{Rcpp}
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
+
+// [[Rcpp::export]]
+void test_order(arma::mat m) {
+  for(int i=0; i!=m.n_elem; ++i) {
+    Rcpp::Rcout << m(i) << " ";
+  }
+  Rcpp::Rcout << "\n";
+}
+```
+
+```{r}
+m = matrix(1:9, 3, 3)
+```
+:::
+
+:::: {.columns .medium}
+::: {.column width='50%'}
+```{r}
+c(m)
+test_order(m)
+```
+:::
+
+::: {.column width='50%'}
+```{r}
+c(t(m))
+test_order(t(m))
+```
+:::
+::::
+
+
+## `fastLm` example
+
+::: {.medium}
+```{Rcpp}
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
+
+// [[Rcpp::export]]
+Rcpp::List fastLm(const arma::mat& X, const arma::colvec& y) {
+    int n = X.n_rows, k = X.n_cols;
+        
+    arma::colvec coef = arma::solve(X, y);    // fit model y ~ X
+    arma::colvec res  = y - X*coef;           // residuals
+
+    // std.errors of coefficients
+    double s2 = std::inner_product(res.begin(), res.end(), res.begin(), 0.0)/(n - k);
+                                                        
+    arma::colvec std_err = arma::sqrt(s2 * arma::diagvec(arma::pinv(arma::trans(X)*X)));
+
+    return Rcpp::List::create(
+      Rcpp::Named("coefficients") = coef,
+      Rcpp::Named("stderr")       = std_err,
+      Rcpp::Named("df.residual")  = n - k
+    );
+}
+```
+:::
+
+::: {.aside}
+From [fastLm.cpp](https://github.com/RcppCore/RcppArmadillo/blob/master/src/fastLm.cpp)
+:::
+
+##
+
+:::: {.columns .small}
+::: {.column width='50%'}
+```{r}
+library(dplyr)
+n=1e5
+d = tibble(
+  x1 = rnorm(n),
+  x2 = rnorm(n),
+  x3 = rnorm(n),
+  x4 = rnorm(n),
+  x5 = rnorm(n),
+) %>%
+  mutate(
+    y = 3 + x1 - x2 + 2*x3 -2*x4 + 3*x5 - rnorm(n)
+  )
+```
+:::
+
+::: {.column width='50%' .fragment}
+```{r}
+res = bench::press(
+  size = c(100, 1000, 10000, 100000),
+  {
+    d = d[seq_len(size),]
+    X = model.matrix(y ~ ., d)
+    y = as.matrix(d$y)
+    
+    bench::mark(
+      lm(y~., data=d),
+      lm.fit(X,y),
+      .lm.fit(X,y),
+      fastLm(X,y),
+      check = FALSE
+    )
+  }
+)
+```
+:::
+::::
+
+
+##
+
+```{r echo=FALSE, fig.align="center"}
+plot(res)
+```
+
+# MVN Example
+

@@ -311,8 +311,8 @@ schedule:
 - week: 14
   day: 3
   lecture: "Rcpp"
-  screencast: Lec25
-  slides: 
+  screencast: 
+  slides: Lec25
   notes:
   readings:
   - text: Rcpp Gallery

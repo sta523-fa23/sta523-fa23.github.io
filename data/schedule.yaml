@@ -321,3 +321,7 @@ schedule:
     link: https://adv-r.hadley.nz/rcpp.html
   - text: Seamless R and C++ Integration with Rcpp
     link: https://link.springer.com/book/10.1007/978-1-4614-6868-4
+
+- week: 17
+  day: -1
+  lecture: "<i>Final project due by 5 pm</i>"
